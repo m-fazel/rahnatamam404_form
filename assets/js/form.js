@@ -1,17 +1,20 @@
-const registrationType = document.getElementById('registration_type');
-const studentFields = document.getElementById('studentFields');
-const marriedFields = document.getElementById('marriedFields');
-const groupFields = document.getElementById('groupFields');
-const studentModeInputs = document.querySelectorAll('input[name="student_mode"]');
-const entryYear = document.getElementById('entry_year');
-const marriedStatus = document.getElementById('married_status');
-const spouseName = document.getElementById('spouse_name');
-const spouseNationalCode = document.getElementById('spouse_national_code');
-const spouseBirthDate = document.getElementById('spouse_birth_date');
-const childrenCount = document.getElementById('children_count');
-const finalAmount = document.getElementById('finalAmount');
-const amountDetails = document.getElementById('amountDetails');
-const groupRequiredFields = document.querySelectorAll('.group-required');
+const getRefs = () => ({
+    registrationType: document.getElementById('registration_type'),
+    studentFields: document.getElementById('studentFields'),
+    marriedFields: document.getElementById('marriedFields'),
+    groupFields: document.getElementById('groupFields'),
+    entryYear: document.getElementById('entry_year'),
+    marriedStatus: document.getElementById('married_status'),
+    spouseName: document.getElementById('spouse_name'),
+    spouseNationalCode: document.getElementById('spouse_national_code'),
+    spouseBirthDate: document.getElementById('spouse_birth_date'),
+    childrenCount: document.getElementById('children_count'),
+    finalAmount: document.getElementById('finalAmount'),
+    amountDetails: document.getElementById('amountDetails'),
+});
+
+const getStudentModeInputs = () => document.querySelectorAll('input[name="student_mode"]');
+const getGroupRequiredFields = () => document.querySelectorAll('.group-required');
 
 const amountTable = {
     student: {
@@ -40,6 +43,10 @@ const toggleRequired = (element, isRequired) => {
 };
 
 const calculateBaseAmount = () => {
+    const { registrationType, entryYear, marriedStatus } = getRefs();
+    if (!registrationType) {
+        return null;
+    }
     const type = registrationType.value;
     if (!type) {
         return null;
@@ -64,7 +71,8 @@ const calculateBaseAmount = () => {
 };
 
 const updateAmount = () => {
-    if (!finalAmount || !amountDetails) {
+    const { registrationType, childrenCount, finalAmount, amountDetails, entryYear } = getRefs();
+    if (!registrationType || !finalAmount || !amountDetails) {
         return;
     }
 
@@ -84,7 +92,7 @@ const updateAmount = () => {
     if (registrationType.value === 'student') {
         const studentMode = document.querySelector('input[name="student_mode"]:checked');
         details.push(`دانشجو - ${studentMode?.value === 'group' ? 'گروهی ۴ نفره' : 'انفرادی'}`);
-        details.push(`ورودی ${entryYear.value.replace('_or_before', ' و ماقبل')}`);
+        details.push(`ورودی ${entryYear?.value.replace('_or_before', ' و ماقبل')}`);
     } else if (registrationType.value === 'married') {
         details.push('ثبت نام متاهلین');
         if (children > 0) {
@@ -100,6 +108,22 @@ const updateAmount = () => {
 };
 
 const handleRegistrationType = () => {
+    const {
+        registrationType,
+        studentFields,
+        marriedFields,
+        groupFields,
+        entryYear,
+        marriedStatus,
+        spouseName,
+        spouseNationalCode,
+        spouseBirthDate,
+    } = getRefs();
+    const studentModeInputs = getStudentModeInputs();
+    const groupRequiredFields = getGroupRequiredFields();
+    if (!registrationType || !studentFields || !marriedFields || !groupFields) {
+        return;
+    }
     const value = registrationType.value;
     studentFields.classList.toggle('d-none', value !== 'student');
     marriedFields.classList.toggle('d-none', value !== 'married');
@@ -127,6 +151,11 @@ const handleRegistrationType = () => {
 };
 
 const handleStudentMode = () => {
+    const { groupFields } = getRefs();
+    const groupRequiredFields = getGroupRequiredFields();
+    if (!groupFields) {
+        return;
+    }
     const selected = document.querySelector('input[name="student_mode"]:checked');
     const isGroup = selected && selected.value === 'group';
     groupFields.classList.toggle('d-none', !isGroup);
@@ -136,23 +165,37 @@ const handleStudentMode = () => {
     updateAmount();
 };
 
-registrationType.addEventListener('change', handleRegistrationType);
-studentModeInputs.forEach((input) => {
-    input.addEventListener('change', handleStudentMode);
+document.addEventListener('change', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) {
+        return;
+    }
+    if (target.id === 'registration_type') {
+        handleRegistrationType();
+        return;
+    }
+    if (target.getAttribute('name') === 'student_mode') {
+        handleStudentMode();
+        return;
+    }
+    if (target.id === 'entry_year' || target.id === 'married_status') {
+        updateAmount();
+    }
+});
+document.addEventListener('input', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) {
+        return;
+    }
+    if (target.id === 'children_count') {
+        updateAmount();
+    }
 });
 
-if (entryYear) {
-    entryYear.addEventListener('change', updateAmount);
-}
-if (marriedStatus) {
-    marriedStatus.addEventListener('change', updateAmount);
-}
-if (childrenCount) {
-    childrenCount.addEventListener('input', updateAmount);
-}
-
-handleRegistrationType();
-updateAmount();
+const initializeForm = () => {
+    handleRegistrationType();
+    updateAmount();
+};
 
 const datePickerComponent = window.Vue3PersianDatetimePicker || window.VuePersianDatetimePicker;
 
@@ -168,4 +211,7 @@ if (window.Vue && datePickerComponent) {
     });
     registrationApp.component('date-picker', datePickerComponent);
     registrationApp.mount('#registrationApp');
+    initializeForm();
+} else {
+    initializeForm();
 }
