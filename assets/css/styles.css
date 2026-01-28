@@ -1,0 +1,42 @@
+body {
+    font-family: "Vazirmatn", "Tahoma", sans-serif;
+    background-color: #f4f6fb;
+    min-height: 100vh;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("../background.svg");
+    background-size: cover;
+    background-position: center;
+    filter: blur(10px);
+    transform: scale(1.05);
+    z-index: -2;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.75);
+    z-index: -1;
+}
+
+.card {
+    border-radius: 1.2rem;
+}
+
+#groupMembers .member-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #fff;
+}
+
+.form-text {
+    color: #6c757d;
+}
