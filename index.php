@@ -100,7 +100,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">کد ملی</label>
-                                                <input type="text" class="form-control" name="national_code" required>
+                                                <input type="text" class="form-control" name="national_code" inputmode="numeric" maxlength="10" pattern="\\d{10}" required>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">تاریخ تولد</label>
@@ -109,7 +109,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">شماره تماس</label>
-                                                <input type="text" class="form-control" name="mobile" required>
+                                                <input type="tel" class="form-control" name="mobile" inputmode="numeric" maxlength="11" pattern="09\\d{9}" required>
                                             </div>
                                         </div>
                                     </div>
@@ -132,7 +132,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">کد ملی همسر</label>
-                                                <input type="text" class="form-control" name="spouse_national_code" id="spouse_national_code">
+                                                <input type="text" class="form-control" name="spouse_national_code" id="spouse_national_code" inputmode="numeric" maxlength="10" pattern="\\d{10}">
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">تاریخ تولد همسر</label>
@@ -172,7 +172,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">کد ملی</label>
-                                                            <input type="text" class="form-control group-required" name="group_members[0][national_code]">
+                                                            <input type="text" class="form-control group-required" name="group_members[0][national_code]" inputmode="numeric" maxlength="10" pattern="\\d{10}">
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">تاریخ تولد</label>
@@ -181,7 +181,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">شماره تماس</label>
-                                                            <input type="text" class="form-control group-required" name="group_members[0][mobile]">
+                                                            <input type="tel" class="form-control group-required" name="group_members[0][mobile]" inputmode="numeric" maxlength="11" pattern="09\\d{9}">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -208,7 +208,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">کد ملی</label>
-                                                            <input type="text" class="form-control group-required" name="group_members[1][national_code]">
+                                                            <input type="text" class="form-control group-required" name="group_members[1][national_code]" inputmode="numeric" maxlength="10" pattern="\\d{10}">
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">تاریخ تولد</label>
@@ -217,7 +217,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">شماره تماس</label>
-                                                            <input type="text" class="form-control group-required" name="group_members[1][mobile]">
+                                                            <input type="tel" class="form-control group-required" name="group_members[1][mobile]" inputmode="numeric" maxlength="11" pattern="09\\d{9}">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -244,7 +244,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">کد ملی</label>
-                                                            <input type="text" class="form-control group-required" name="group_members[2][national_code]">
+                                                            <input type="text" class="form-control group-required" name="group_members[2][national_code]" inputmode="numeric" maxlength="10" pattern="\\d{10}">
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">تاریخ تولد</label>
@@ -253,7 +253,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">شماره تماس</label>
-                                                            <input type="text" class="form-control group-required" name="group_members[2][mobile]">
+                                                            <input type="tel" class="form-control group-required" name="group_members[2][mobile]" inputmode="numeric" maxlength="11" pattern="09\\d{9}">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -280,7 +280,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">کد ملی</label>
-                                                            <input type="text" class="form-control group-required" name="group_members[3][national_code]">
+                                                            <input type="text" class="form-control group-required" name="group_members[3][national_code]" inputmode="numeric" maxlength="10" pattern="\\d{10}">
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">تاریخ تولد</label>
@@ -289,7 +289,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">شماره تماس</label>
-                                                            <input type="text" class="form-control group-required" name="group_members[3][mobile]">
+                                                            <input type="tel" class="form-control group-required" name="group_members[3][mobile]" inputmode="numeric" maxlength="11" pattern="09\\d{9}">
                                                         </div>
                                                     </div>
                                                 </div>
