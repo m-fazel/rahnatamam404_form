@@ -6,6 +6,68 @@ function clean_input($value)
     return trim((string) $value);
 }
 
+function normalize_digits($value)
+{
+    $digitMap = [
+        '۰' => '0',
+        '۱' => '1',
+        '۲' => '2',
+        '۳' => '3',
+        '۴' => '4',
+        '۵' => '5',
+        '۶' => '6',
+        '۷' => '7',
+        '۸' => '8',
+        '۹' => '9',
+        '٠' => '0',
+        '١' => '1',
+        '٢' => '2',
+        '٣' => '3',
+        '٤' => '4',
+        '٥' => '5',
+        '٦' => '6',
+        '٧' => '7',
+        '٨' => '8',
+        '٩' => '9',
+    ];
+
+    return strtr((string) $value, $digitMap);
+}
+
+function sanitize_numeric($value)
+{
+    $normalized = normalize_digits($value);
+    return preg_replace('/\D+/', '', $normalized);
+}
+
+function is_valid_national_code($value)
+{
+    $code = sanitize_numeric($value);
+    if (strlen($code) !== 10) {
+        return false;
+    }
+    if (preg_match('/^(\d)\1{9}$/', $code)) {
+        return false;
+    }
+    $sum = 0;
+    for ($i = 0; $i < 9; $i += 1) {
+        $sum += (int) $code[$i] * (10 - $i);
+    }
+    $remainder = $sum % 11;
+    $checkDigit = (int) $code[9];
+    if ($remainder < 2) {
+        return $checkDigit === $remainder;
+    }
+
+    return $checkDigit === (11 - $remainder);
+}
+
+function is_valid_mobile($value)
+{
+    $mobile = sanitize_numeric($value);
+    return (bool) preg_match('/^09\d{9}$/', $mobile);
+}
+
 function calculate_amount($registrationType, $studentMode, $entryYear, $marriedStatus, $childrenCount)
 {
     $amountTable = [
@@ -50,12 +112,12 @@ $marriedStatus = clean_input($_POST['married_status'] ?? '');
 $firstName = clean_input($_POST['first_name'] ?? '');
 $lastName = clean_input($_POST['last_name'] ?? '');
 $gender = clean_input($_POST['gender'] ?? '');
-$nationalCode = clean_input($_POST['national_code'] ?? '');
+$nationalCode = sanitize_numeric($_POST['national_code'] ?? '');
 $birthDate = clean_input($_POST['birth_date'] ?? '');
-$mobile = clean_input($_POST['mobile'] ?? '');
+$mobile = sanitize_numeric($_POST['mobile'] ?? '');
 
 $spouseName = clean_input($_POST['spouse_name'] ?? '');
-$spouseNationalCode = clean_input($_POST['spouse_national_code'] ?? '');
+$spouseNationalCode = sanitize_numeric($_POST['spouse_national_code'] ?? '');
 $spouseBirthDate = clean_input($_POST['spouse_birth_date'] ?? '');
 $childrenCount = clean_input($_POST['children_count'] ?? '');
 
@@ -73,10 +135,21 @@ if ($registrationType === 'married') {
     if ($marriedStatus === '' || $spouseName === '' || $spouseNationalCode === '' || $spouseBirthDate === '') {
         exit('لطفا اطلاعات همسر و وضعیت تحصیلی را کامل کنید.');
     }
+    if (!is_valid_national_code($spouseNationalCode)) {
+        exit('کد ملی همسر معتبر نیست.');
+    }
 }
 
 if ($firstName === '' || $lastName === '' || $gender === '' || $nationalCode === '' || $birthDate === '' || $mobile === '') {
     exit('لطفا تمام مشخصات فردی را وارد کنید.');
+}
+
+if (!is_valid_national_code($nationalCode)) {
+    exit('کد ملی وارد شده معتبر نیست.');
+}
+
+if (!is_valid_mobile($mobile)) {
+    exit('شماره تماس وارد شده معتبر نیست.');
 }
 
 $groupMembers = $_POST['group_members'] ?? [];
@@ -91,12 +164,20 @@ if ($registrationType === 'student' && $studentMode === 'group') {
         $memberFirst = clean_input($member['first_name'] ?? '');
         $memberLast = clean_input($member['last_name'] ?? '');
         $memberGender = clean_input($member['gender'] ?? '');
-        $memberNational = clean_input($member['national_code'] ?? '');
+        $memberNational = sanitize_numeric($member['national_code'] ?? '');
         $memberBirth = clean_input($member['birth_date'] ?? '');
-        $memberMobile = clean_input($member['mobile'] ?? '');
+        $memberMobile = sanitize_numeric($member['mobile'] ?? '');
 
         if ($memberFirst === '' || $memberLast === '' || $memberGender === '' || $memberNational === '' || $memberBirth === '' || $memberMobile === '') {
             exit('لطفا مشخصات تمام اعضای گروه را کامل کنید.');
+        }
+
+        if (!is_valid_national_code($memberNational)) {
+            exit('کد ملی اعضای گروه معتبر نیست.');
+        }
+
+        if (!is_valid_mobile($memberMobile)) {
+            exit('شماره تماس اعضای گروه معتبر نیست.');
         }
     }
 }
@@ -144,9 +225,9 @@ try {
                 ':first_name' => clean_input($member['first_name'] ?? ''),
                 ':last_name' => clean_input($member['last_name'] ?? ''),
                 ':gender' => clean_input($member['gender'] ?? ''),
-                ':national_code' => clean_input($member['national_code'] ?? ''),
+                ':national_code' => sanitize_numeric($member['national_code'] ?? ''),
                 ':birth_date' => clean_input($member['birth_date'] ?? ''),
-                ':mobile' => clean_input($member['mobile'] ?? ''),
+                ':mobile' => sanitize_numeric($member['mobile'] ?? ''),
             ]);
         }
     }

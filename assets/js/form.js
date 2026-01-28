@@ -42,6 +42,95 @@ const toggleRequired = (element, isRequired) => {
     }
 };
 
+const digitMap = {
+    '۰': '0',
+    '۱': '1',
+    '۲': '2',
+    '۳': '3',
+    '۴': '4',
+    '۵': '5',
+    '۶': '6',
+    '۷': '7',
+    '۸': '8',
+    '۹': '9',
+    '٠': '0',
+    '١': '1',
+    '٢': '2',
+    '٣': '3',
+    '٤': '4',
+    '٥': '5',
+    '٦': '6',
+    '٧': '7',
+    '٨': '8',
+    '٩': '9',
+};
+
+const normalizeDigits = (value) => value.replace(/[۰-۹٠-٩]/g, (digit) => digitMap[digit] ?? digit);
+
+const sanitizeNumeric = (value) => normalizeDigits(value).replace(/\D/g, '');
+
+const isValidNationalCode = (value) => {
+    const code = sanitizeNumeric(value);
+    if (code.length !== 10) {
+        return false;
+    }
+    if (/^(\d)\1{9}$/.test(code)) {
+        return false;
+    }
+    const digits = code.split('').map(Number);
+    let sum = 0;
+    for (let i = 0; i < 9; i += 1) {
+        sum += digits[i] * (10 - i);
+    }
+    const remainder = sum % 11;
+    const checkDigit = digits[9];
+    return remainder < 2 ? checkDigit === remainder : checkDigit === 11 - remainder;
+};
+
+const isValidMobile = (value) => /^09\d{9}$/.test(sanitizeNumeric(value));
+
+const isNationalCodeInput = (input) =>
+    input.matches('input[name="national_code"], input[name="spouse_national_code"], input[name^="group_members"][name$="[national_code]"]');
+
+const isMobileInput = (input) =>
+    input.matches('input[name="mobile"], input[name^="group_members"][name$="[mobile]"]');
+
+const validateNationalCodeInput = (input) => {
+    const isRequired = input.hasAttribute('required');
+    const sanitized = sanitizeNumeric(input.value);
+    if (input.value !== sanitized) {
+        input.value = sanitized;
+    }
+    if (!sanitized) {
+        input.setCustomValidity(isRequired ? 'کد ملی الزامی است.' : '');
+        return !isRequired;
+    }
+    if (!isValidNationalCode(sanitized)) {
+        input.setCustomValidity('کد ملی معتبر نیست.');
+        return false;
+    }
+    input.setCustomValidity('');
+    return true;
+};
+
+const validateMobileInput = (input) => {
+    const isRequired = input.hasAttribute('required');
+    const sanitized = sanitizeNumeric(input.value);
+    if (input.value !== sanitized) {
+        input.value = sanitized;
+    }
+    if (!sanitized) {
+        input.setCustomValidity(isRequired ? 'شماره تماس الزامی است.' : '');
+        return !isRequired;
+    }
+    if (!isValidMobile(sanitized)) {
+        input.setCustomValidity('شماره تماس معتبر نیست.');
+        return false;
+    }
+    input.setCustomValidity('');
+    return true;
+};
+
 const calculateBaseAmount = () => {
     const { registrationType, entryYear, marriedStatus } = getRefs();
     if (!registrationType) {
@@ -190,11 +279,44 @@ document.addEventListener('input', (event) => {
     if (target.id === 'children_count') {
         updateAmount();
     }
+    if (target instanceof HTMLInputElement) {
+        if (isNationalCodeInput(target)) {
+            validateNationalCodeInput(target);
+        }
+        if (isMobileInput(target)) {
+            validateMobileInput(target);
+        }
+    }
 });
 
 const initializeForm = () => {
     handleRegistrationType();
     updateAmount();
+
+    const form = document.getElementById('registrationForm');
+    if (form) {
+        form.addEventListener('submit', (event) => {
+            let valid = true;
+            form.querySelectorAll('input').forEach((input) => {
+                if (isNationalCodeInput(input)) {
+                    if (!validateNationalCodeInput(input)) {
+                        valid = false;
+                    }
+                }
+                if (isMobileInput(input)) {
+                    if (!validateMobileInput(input)) {
+                        valid = false;
+                    }
+                }
+            });
+
+            if (!valid || !form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        });
+    }
 };
 
 const datePickerComponent = window.Vue3PersianDatetimePicker || window.VuePersianDatetimePicker;
