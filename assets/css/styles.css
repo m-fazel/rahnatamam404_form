@@ -1,7 +1,14 @@
+:root {
+    --brand-primary: #003e5f;
+    --brand-accent: #ffe548;
+    --brand-light: #ffffff;
+}
+
 body {
     font-family: "Vazirmatn", "Tahoma", sans-serif;
-    background-color: #f4f6fb;
     min-height: 100vh;
+    color: var(--brand-light);
+    background-color: #0a2a3d;
     position: relative;
 }
 
@@ -9,11 +16,11 @@ body::before {
     content: "";
     position: fixed;
     inset: 0;
-    background-image: url("../background.svg");
+    background-image: url("../images/background.jpg");
     background-size: cover;
     background-position: center;
-    filter: blur(10px);
-    transform: scale(1.05);
+    filter: blur(6px);
+    transform: scale(1.02);
     z-index: -2;
 }
 
@@ -21,22 +28,148 @@ body::after {
     content: "";
     position: fixed;
     inset: 0;
-    background: rgba(255, 255, 255, 0.75);
+    background: linear-gradient(120deg, rgba(0, 62, 95, 0.85), rgba(6, 32, 49, 0.75));
     z-index: -1;
 }
 
-.card {
-    border-radius: 1.2rem;
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-#groupMembers .member-card {
+.hero-section {
+    padding: 4rem 0 2.5rem;
+}
+
+.hero-content {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+}
+
+@media (min-width: 992px) {
+    .hero-content {
+        grid-template-columns: 1.4fr 1fr;
+    }
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    background: rgba(255, 229, 72, 0.2);
+    color: var(--brand-accent);
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.hero-title {
+    font-weight: 800;
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    margin-bottom: 0.75rem;
+}
+
+.hero-subtitle {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 1rem;
+    max-width: 32rem;
+    margin-bottom: 0;
+}
+
+.hero-info {
+    display: grid;
+    gap: 1rem;
+}
+
+.info-card {
+    background: rgba(0, 62, 95, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.25rem;
+    padding: 1.25rem 1.5rem;
+    color: var(--brand-light);
+}
+
+.info-note {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+}
+
+.final-amount {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--brand-accent);
+    margin-bottom: 0.5rem;
+}
+
+.form-section {
+    padding-bottom: 4rem;
+}
+
+.card {
+    border-radius: 1.5rem;
+    color: #1f2937;
+}
+
+.card-body {
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 1.5rem;
+}
+
+.alert {
+    background: rgba(255, 255, 255, 0.85);
+}
+
+.form-label,
+.form-check-label,
+.form-text {
+    color: #1f2937;
+}
+
+.form-control,
+.form-select {
+    border-radius: 0.9rem;
+    border-color: #d1d5db;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 0.15rem rgba(0, 62, 95, 0.15);
+}
+
+.btn-accent {
+    background: var(--brand-accent);
+    color: #1f2937;
+    border: none;
+    border-radius: 999px;
+    font-weight: 700;
+}
+
+.btn-accent:hover {
+    background: #ffef76;
+    color: #1f2937;
+}
+
+.member-card {
     border: 1px solid #e5e7eb;
     border-radius: 1rem;
-    padding: 1rem;
-    margin-bottom: 1rem;
+    padding: 1.25rem;
     background-color: #fff;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
 }
 
 .form-text {
-    color: #6c757d;
+    color: #6b7280;
+}
+
+.vpd-wrapper {
+    width: 100%;
+}
+
+.vpd-input-group input {
+    text-align: right;
 }

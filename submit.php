@@ -6,7 +6,7 @@ function clean_input($value)
     return trim((string) $value);
 }
 
-function calculate_amount($registrationType, $studentMode, $entryYear, $marriedStatus)
+function calculate_amount($registrationType, $studentMode, $entryYear, $marriedStatus, $childrenCount)
 {
     $amountTable = [
         'student' => [
@@ -33,7 +33,8 @@ function calculate_amount($registrationType, $studentMode, $entryYear, $marriedS
         $base = $amountTable[$registrationType] ?? 0;
     }
 
-    return $base * 10000;
+    $childrenTotal = max((int) $childrenCount, 0) * 500000;
+    return ($base * 10000) + $childrenTotal;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -82,8 +83,8 @@ $groupMembers = $_POST['group_members'] ?? [];
 $groupCount = (int) ($_POST['group_count'] ?? 0);
 
 if ($registrationType === 'student' && $studentMode === 'group') {
-    if ($groupCount < 2 || !is_array($groupMembers) || count($groupMembers) < 2) {
-        exit('حداقل دو نفر برای ثبت نام گروهی لازم است.');
+    if ($groupCount !== 4 || !is_array($groupMembers) || count($groupMembers) !== 4) {
+        exit('ثبت نام گروهی فقط برای ۴ نفر امکان‌پذیر است.');
     }
 
     foreach ($groupMembers as $member) {
@@ -100,7 +101,7 @@ if ($registrationType === 'student' && $studentMode === 'group') {
     }
 }
 
-$amount = calculate_amount($registrationType, $studentMode, $entryYear, $marriedStatus);
+$amount = calculate_amount($registrationType, $studentMode, $entryYear, $marriedStatus, $childrenCount);
 if ($amount <= 0) {
     exit('مبلغ قابل محاسبه نیست.');
 }
