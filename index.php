@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ثبت نام نهایی اردوی راه‌ناتمام ۱۴۰۴</title>
-    <link href="assets/bootstrap.rtl.min.css" rel="stylesheet">
+    <link href="assets/bootstrap/bootstrap.rtl.min.css" rel="stylesheet">
     <link href="assets/css/styles.css" rel="stylesheet">
 </head>
 <body>
@@ -311,10 +311,10 @@
     </main>
 
     <script src="assets/js/vue.global.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/min/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/moment-jalaali@0.9.2/build/moment-jalaali.js"></script>
-    <script src="https://raw.githubusercontent.com/talkhabi/vue3-persian-datetime-picker/refs/heads/master/dist/vue3-persian-datetime-picker.umd.min.js"></script>
-    <script src="assets/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/moment.min.js"></script>
+    <script src="assets/js/moment-jalaali.js"></script>
+    <script src="assets/js/vue3-persian-datetime-picker.umd.min.js"></script>
+    <script src="assets/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="assets/js/form.js"></script>
 </body>
 </html>
