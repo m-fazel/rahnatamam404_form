@@ -76,7 +76,7 @@ const updateAmount = () => {
     }
 
     const children = registrationType.value === 'married' ? Math.max(parseInt(childrenCount?.value || 0, 10), 0) : 0;
-    const amount = base * 10000 + (children * 500000);
+    const amount = base * 1000 + (children * 50000);
 
     finalAmount.textContent = `${amount.toLocaleString('fa-IR')} تومان`;
 
@@ -154,7 +154,9 @@ if (childrenCount) {
 handleRegistrationType();
 updateAmount();
 
-if (window.Vue && window.VuePersianDatetimePicker) {
+const datePickerComponent = window.Vue3PersianDatetimePicker || window.VuePersianDatetimePicker;
+
+if (window.Vue && datePickerComponent) {
     const registrationApp = Vue.createApp({
         data() {
             return {
@@ -164,6 +166,6 @@ if (window.Vue && window.VuePersianDatetimePicker) {
             };
         },
     });
-    registrationApp.component('date-picker', VuePersianDatetimePicker);
+    registrationApp.component('date-picker', datePickerComponent);
     registrationApp.mount('#registrationApp');
 }

@@ -20,14 +20,10 @@
                         <p class="hero-subtitle">اطلاعات را با دقت تکمیل کنید تا مبلغ نهایی و پرداخت در همان لحظه برایتان نمایش داده شود.</p>
                     </div>
                     <div class="hero-info">
-                        <div class="info-card">
+                        <div class="info-card final-card">
                             <h2 class="h6 mb-2">مبلغ نهایی شما</h2>
                             <p class="final-amount" id="finalAmount">—</p>
                             <p class="small text-muted mb-0" id="amountDetails">نوع ثبت نام و گزینه‌ها را انتخاب کنید.</p>
-                        </div>
-                        <div class="info-card info-note">
-                            <p class="mb-1">ثبت نام گروهی فقط ۴ نفره است.</p>
-                            <p class="mb-0">هر فرزند ۵۰۰ هزار تومان به مبلغ اضافه می‌کند.</p>
                         </div>
                     </div>
                 </div>
@@ -315,7 +311,9 @@
     </main>
 
     <script src="assets/js/vue.global.js"></script>
-    <script src="assets/js/vue-persian-datetime-picker.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/min/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment-jalaali@0.9.2/build/moment-jalaali.js"></script>
+    <script src="https://raw.githubusercontent.com/talkhabi/vue3-persian-datetime-picker/refs/heads/master/dist/vue3-persian-datetime-picker.umd.min.js"></script>
     <script src="assets/bootstrap.bundle.min.js"></script>
     <script src="assets/js/form.js"></script>
 </body>
