@@ -41,6 +41,11 @@
                                     <p class="mb-2">انجام مراحل را تا انتها و پرداخت وجه ادامه دهید.</p>
                                     <p class="mb-0">هرگونه اشتباه و خطا در ثبت اطلاعات برعهده تکمیل‌کننده می‌باشد!</p>
                                 </div>
+                                <div class="info-card contact-card mb-4">
+                                    <h2 class="h6 fw-bold mb-2">راه‌های ارتباطی اردو</h2>
+                                    <p class="mb-1">آی‌دی کانال اردو در تلگرام و بله: <a href="https://t.me/Rah_Natamam_1404" target="_blank" rel="noopener">Rah_Natamam_1404</a> | <a href="https://ble.ir/Rah_Natamam_1404" target="_blank" rel="noopener">Rah_Natamam_1404</a></p>
+                                    <p class="mb-0">آی‌دی پشتیبانی در تلگرام و بله: <a href="https://t.me/RahNatamam_Baradaran" target="_blank" rel="noopener">RahNatamam_Baradaran</a> | <a href="https://ble.ir/RahNatamam_Baradaran" target="_blank" rel="noopener">RahNatamam_Baradaran</a></p>
+                                </div>
 
                                 <form action="submit.php" method="post" id="registrationForm">
                                     <div class="mb-3">
@@ -51,6 +56,15 @@
                                             <option value="alumni">فارغ التحصیل</option>
                                             <option value="married">متاهلین</option>
                                             <option value="other">سایر</option>
+                                        </select>
+                                    </div>
+                                    <div id="marriedStatusField" class="d-none mb-3">
+                                        <label for="married_status" class="form-label fw-semibold">وضعیت تحصیلی (تنها یکی از زوجین کفایت می‌کند)</label>
+                                        <select class="form-select" id="married_status" name="married_status">
+                                            <option value="">انتخاب کنید</option>
+                                            <option value="married_student">متاهل - دانشجو شریف</option>
+                                            <option value="married_alumni">متاهل - فارغ التحصیل شریف</option>
+                                            <option value="married_other">متاهل - غیرشریفی</option>
                                         </select>
                                     </div>
 
@@ -115,16 +129,7 @@
                                     </div>
 
                                     <div id="marriedFields" class="d-none mt-4">
-                                        <h2 class="h5 fw-bold">مشخصات همسر</h2>
-                                        <div class="mb-3">
-                                            <label for="married_status" class="form-label fw-semibold">وضعیت تحصیلی (تنها یکی از زوجین کفایت می‌کند)</label>
-                                            <select class="form-select" id="married_status" name="married_status">
-                                                <option value="">انتخاب کنید</option>
-                                                <option value="married_student">متاهل - دانشجو شریف</option>
-                                                <option value="married_alumni">متاهل - فارغ التحصیل شریف</option>
-                                                <option value="married_other">متاهل - غیرشریفی</option>
-                                            </select>
-                                        </div>
+                                        <h2 class="h5 fw-bold">مشخصات همسر و فرزندان</h2>
                                         <div class="row g-3">
                                             <div class="col-md-6">
                                                 <label class="form-label">نام و نام خانوادگی همسر</label>
@@ -142,6 +147,7 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">تعداد فرزندان (درصورت وجود)</label>
                                                 <input type="number" class="form-control" name="children_count" id="children_count" min="0" value="0" placeholder="مثال: ۰">
+                                                <div class="form-text">قبل از ثبت تعداد فرزندان حتما با پشتیبانی اردو در ارتباط باشید و اعلام کنید بهشون.</div>
                                             </div>
                                         </div>
                                     </div>
@@ -226,7 +232,7 @@
                                     </div>
 
                                     <div class="d-grid mt-4">
-                                        <button type="submit" class="btn btn-accent btn-lg">پرداخت و انتقال به درگاه</button>
+                                        <button type="submit" class="btn btn-accent btn-lg">انتقال به درگاه و پرداخت</button>
                                         <p class="small text-muted mt-2 text-center">مبلغ نهایی بر اساس نوع ثبت نام محاسبه می‌شود.</p>
                                     </div>
                                 </form>
