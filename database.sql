@@ -36,3 +36,15 @@ CREATE TABLE `group_members` (
     KEY `idx_registration_id` (`registration_id`),
     CONSTRAINT `fk_group_members_registration` FOREIGN KEY (`registration_id`) REFERENCES `registrations` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `national_codes` (
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `code` VARCHAR(20) NOT NULL,
+    `registration_id` INT UNSIGNED NOT NULL,
+    `role` VARCHAR(30) NOT NULL,
+    `created_at` DATETIME NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uniq_national_code` (`code`),
+    KEY `idx_registration_id` (`registration_id`),
+    CONSTRAINT `fk_national_codes_registration` FOREIGN KEY (`registration_id`) REFERENCES `registrations` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

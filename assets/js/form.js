@@ -74,9 +74,6 @@ const isValidNationalCode = (value) => {
     if (code.length !== 10) {
         return false;
     }
-    if (/^(\d)\1{9}$/.test(code)) {
-        return false;
-    }
     const digits = code.split('').map(Number);
     let sum = 0;
     for (let i = 0; i < 9; i += 1) {
