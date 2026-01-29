@@ -117,7 +117,7 @@ function calculate_amount($registrationType, $studentMode, $entryYear, $marriedS
         $base = $amountTable[$registrationType] ?? 0;
     }
 
-    $childrenTotal = $registrationType === 'married' ? max((int) $childrenCount, 0) * 5000000 : 0;
+    $childrenTotal = max((int) $childrenCount, 0) * 5000000;
     return ($base * 10000) + $childrenTotal;
 }
 
@@ -127,9 +127,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $registrationType = clean_input($_POST['registration_type'] ?? '');
-$studentMode = clean_input($_POST['student_mode'] ?? '');
-$entryYear = clean_input($_POST['entry_year'] ?? '');
-$marriedStatus = clean_input($_POST['married_status'] ?? '');
+$studentMode = $registrationType === 'student' ? clean_input($_POST['student_mode'] ?? '') : '';
+$entryYear = $registrationType === 'student' ? clean_input($_POST['entry_year'] ?? '') : '';
+$marriedStatus = $registrationType === 'married' ? clean_input($_POST['married_status'] ?? '') : '';
 
 $firstName = clean_input($_POST['first_name'] ?? '');
 $lastName = clean_input($_POST['last_name'] ?? '');
@@ -138,10 +138,10 @@ $nationalCode = sanitize_numeric($_POST['national_code'] ?? '');
 $birthDate = clean_input($_POST['birth_date'] ?? '');
 $mobile = sanitize_numeric($_POST['mobile'] ?? '');
 
-$spouseName = clean_input($_POST['spouse_name'] ?? '');
-$spouseNationalCode = sanitize_numeric($_POST['spouse_national_code'] ?? '');
-$spouseBirthDate = clean_input($_POST['spouse_birth_date'] ?? '');
-$childrenCount = clean_input($_POST['children_count'] ?? '');
+$spouseName = $registrationType === 'married' ? clean_input($_POST['spouse_name'] ?? '') : '';
+$spouseNationalCode = $registrationType === 'married' ? sanitize_numeric($_POST['spouse_national_code'] ?? '') : '';
+$spouseBirthDate = $registrationType === 'married' ? clean_input($_POST['spouse_birth_date'] ?? '') : '';
+$childrenCount = $registrationType === 'married' ? clean_input($_POST['children_count'] ?? '') : 0;
 
 if ($registrationType === '') {
     exit('نوع ثبت نام مشخص نشده است.');
