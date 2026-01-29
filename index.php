@@ -15,7 +15,7 @@
             <div class="container">
                 <div class="hero-content">
                     <div>
-                        <span class="hero-badge">ثبت نام قطعی</span>
+                        <span class="hero-badge">ثبت نام نهایی</span>
                         <h1 class="hero-title">اردوی راه‌ناتمام ۱۴۰۴</h1>
                         <p class="hero-subtitle">اطلاعات را با دقت تکمیل کنید تا مبلغ نهایی و پرداخت در همان لحظه برایتان نمایش داده شود.</p>
                     </div>
@@ -37,7 +37,7 @@
                         <div class="card shadow-lg border-0">
                             <div class="card-body p-4 p-md-5">
                                 <div class="alert alert-light border text-secondary mb-4">
-                                    <p class="mb-2">سلام! به صفحه‌ی ثبت‌نام قطعی و پرداخت‌وجه اردوی راه‌ناتمام ۱۴۰۴ خوش آمدید. لطفا به تمامی سوالات، کامل و بادقت پاسخ دهید.</p>
+                                    <p class="mb-2">سلام! به صفحه‌ی ثبت‌نام نهایی و پرداخت‌وجه اردوی راه‌ناتمام ۱۴۰۴ خوش آمدید. لطفا به تمامی سوالات، کامل و بادقت پاسخ دهید.</p>
                                     <p class="mb-2">انجام مراحل را تا انتها و پرداخت وجه ادامه دهید.</p>
                                     <p class="mb-0">هرگونه اشتباه و خطا در ثبت اطلاعات برعهده تکمیل‌کننده می‌باشد!</p>
                                 </div>
