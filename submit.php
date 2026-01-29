@@ -46,9 +46,6 @@ function is_valid_national_code($value)
     if (strlen($code) !== 10) {
         return false;
     }
-    if (preg_match('/^(\d)\1{9}$/', $code)) {
-        return false;
-    }
     $sum = 0;
     for ($i = 0; $i < 9; $i += 1) {
         $sum += (int) $code[$i] * (10 - $i);
@@ -66,6 +63,31 @@ function is_valid_mobile($value)
 {
     $mobile = sanitize_numeric($value);
     return (bool) preg_match('/^09\d{9}$/', $mobile);
+}
+
+function is_registered_national_code(PDO $pdo, $code)
+{
+    try {
+        $stmt = $pdo->prepare('SELECT 1 FROM national_codes WHERE code = :code LIMIT 1');
+        $stmt->execute([':code' => $code]);
+        if ($stmt->fetchColumn()) {
+            return true;
+        }
+    } catch (PDOException $e) {
+        // If the table does not exist yet, fall back to other checks.
+    }
+
+    $stmt = $pdo->prepare('SELECT 1 FROM registrations WHERE national_code = :code OR spouse_national_code = :code LIMIT 1');
+    $stmt->execute([':code' => $code]);
+
+    if ($stmt->fetchColumn()) {
+        return true;
+    }
+
+    $stmt = $pdo->prepare('SELECT 1 FROM group_members WHERE national_code = :code LIMIT 1');
+    $stmt->execute([':code' => $code]);
+
+    return (bool) $stmt->fetchColumn();
 }
 
 function calculate_amount($registrationType, $studentMode, $entryYear, $marriedStatus, $childrenCount)
@@ -182,14 +204,46 @@ if ($registrationType === 'student' && $studentMode === 'group') {
     }
 }
 
+$pdo = get_pdo($DB_HOST, $DB_NAME, $DB_USER, $DB_PASS);
+
+$submittedCodeRecords = [
+    ['code' => $nationalCode, 'role' => 'primary'],
+];
+
+if ($spouseNationalCode !== '') {
+    $submittedCodeRecords[] = ['code' => $spouseNationalCode, 'role' => 'spouse'];
+}
+
+if ($registrationType === 'student' && $studentMode === 'group') {
+    foreach ($groupMembers as $index => $member) {
+        $memberNational = sanitize_numeric($member['national_code'] ?? '');
+        if ($memberNational !== '') {
+            $submittedCodeRecords[] = [
+                'code' => $memberNational,
+                'role' => sprintf('group_member_%d', $index + 2),
+            ];
+        }
+    }
+}
+
+$submittedCodes = array_map(static fn ($record) => $record['code'], $submittedCodeRecords);
+
+if (count($submittedCodes) !== count(array_unique($submittedCodes))) {
+    exit('کد ملی تکراری در فرم وارد شده است.');
+}
+
+foreach ($submittedCodes as $code) {
+    if (is_registered_national_code($pdo, $code)) {
+        exit('کد ملی قبلا ثبت شده است و امکان ثبت مجدد وجود ندارد.');
+    }
+}
+
 $amount = calculate_amount($registrationType, $studentMode, $entryYear, $marriedStatus, $childrenCount);
 if ($amount <= 0) {
     exit('مبلغ قابل محاسبه نیست.');
 }
 
 $formattedAmount = number_format($amount);
-
-$pdo = get_pdo($DB_HOST, $DB_NAME, $DB_USER, $DB_PASS);
 
 $pdo->beginTransaction();
 
@@ -232,7 +286,28 @@ try {
         }
     }
 
+    try {
+        $codeStmt = $pdo->prepare('INSERT INTO national_codes (code, registration_id, role, created_at) VALUES (:code, :registration_id, :role, NOW())');
+        foreach ($submittedCodeRecords as $record) {
+            $codeStmt->execute([
+                ':code' => $record['code'],
+                ':registration_id' => $registrationId,
+                ':role' => $record['role'],
+            ]);
+        }
+    } catch (PDOException $e) {
+        if (($e->errorInfo[1] ?? null) !== 1146) {
+            throw $e;
+        }
+    }
+
     $pdo->commit();
+} catch (PDOException $e) {
+    $pdo->rollBack();
+    if (($e->errorInfo[1] ?? null) === 1062 || $e->getCode() === '23000') {
+        exit('کد ملی قبلا ثبت شده است و امکان ثبت مجدد وجود ندارد.');
+    }
+    exit('خطا در ذخیره اطلاعات.');
 } catch (Exception $e) {
     $pdo->rollBack();
     exit('خطا در ذخیره اطلاعات.');
