@@ -178,6 +178,21 @@ body::after {
 
 .vpd-main .form-control {
     line-height: 1.5;
+    padding: .375rem .75rem;
+}
+
+.vpd-main .vpd-input-group label {
+    border-top-right-radius: 0.25rem !important;
+    border-bottom-right-radius: 0.25rem !important;
+}
+
+.vpd-main .vpd-content {
+    border-radius: 7px;
+}
+
+.vpd-main .vpd-header {
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
 }
 
 #amountDetails {
