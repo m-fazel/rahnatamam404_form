@@ -175,3 +175,11 @@ body::after {
 .vpd-input-group input {
     text-align: right;
 }
+
+.vpd-main .form-control {
+    line-height: 1.5;
+}
+
+#amountDetails {
+    color: #ffffff;
+}
