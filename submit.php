@@ -68,6 +68,20 @@ function is_valid_mobile($value)
     return (bool) preg_match('/^09\d{9}$/', $mobile);
 }
 
+function is_registered_national_code(PDO $pdo, $code)
+{
+    $stmt = $pdo->prepare('SELECT 1 FROM registrations WHERE national_code = :code OR spouse_national_code = :code LIMIT 1');
+    $stmt->execute([':code' => $code]);
+    if ($stmt->fetchColumn()) {
+        return true;
+    }
+
+    $stmt = $pdo->prepare('SELECT 1 FROM group_members WHERE national_code = :code LIMIT 1');
+    $stmt->execute([':code' => $code]);
+
+    return (bool) $stmt->fetchColumn();
+}
+
 function calculate_amount($registrationType, $studentMode, $entryYear, $marriedStatus, $childrenCount)
 {
     $amountTable = [
@@ -182,14 +196,39 @@ if ($registrationType === 'student' && $studentMode === 'group') {
     }
 }
 
+$pdo = get_pdo($DB_HOST, $DB_NAME, $DB_USER, $DB_PASS);
+
+$submittedCodes = [$nationalCode];
+
+if ($spouseNationalCode !== '') {
+    $submittedCodes[] = $spouseNationalCode;
+}
+
+if ($registrationType === 'student' && $studentMode === 'group') {
+    foreach ($groupMembers as $member) {
+        $memberNational = sanitize_numeric($member['national_code'] ?? '');
+        if ($memberNational !== '') {
+            $submittedCodes[] = $memberNational;
+        }
+    }
+}
+
+if (count($submittedCodes) !== count(array_unique($submittedCodes))) {
+    exit('کد ملی تکراری در فرم وارد شده است.');
+}
+
+foreach ($submittedCodes as $code) {
+    if (is_registered_national_code($pdo, $code)) {
+        exit('کد ملی قبلا ثبت شده است و امکان ثبت مجدد وجود ندارد.');
+    }
+}
+
 $amount = calculate_amount($registrationType, $studentMode, $entryYear, $marriedStatus, $childrenCount);
 if ($amount <= 0) {
     exit('مبلغ قابل محاسبه نیست.');
 }
 
 $formattedAmount = number_format($amount);
-
-$pdo = get_pdo($DB_HOST, $DB_NAME, $DB_USER, $DB_PASS);
 
 $pdo->beginTransaction();
 
