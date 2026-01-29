@@ -43,21 +43,23 @@
                                 </div>
                                 <div class="info-card contact-card mb-4">
                                     <h2 class="h6 fw-bold mb-2">راه‌های ارتباطی اردو</h2>
+                                    <p class="mb-1 fw-semibold">کانال اردو:</p>
                                     <p class="mb-1">
-                                        آی‌دی کانال اردو:
-                                        <span class="contact-id-list">
-                                            <a href="https://t.me/Rah_Natamam_1404" target="_blank" rel="noopener">Rah_Natamam_1404</a>
-                                            <span class="contact-separator">|</span>
-                                            <a href="https://ble.ir/Rah_Natamam_1404" target="_blank" rel="noopener">Rah_Natamam_1404</a>
-                                        </span>
+                                        تلگرام:
+                                        <a href="https://t.me/Rah_Natamam_1404" target="_blank" rel="noopener">Rah_Natamam_1404</a>
+                                    </p>
+                                    <p class="mb-3">
+                                        بله:
+                                        <a href="https://ble.ir/Rah_Natamam_1404" target="_blank" rel="noopener">Rah_Natamam_1404</a>
+                                    </p>
+                                    <p class="mb-1 fw-semibold">حساب پشتیبانی:</p>
+                                    <p class="mb-1">
+                                        تلگرام:
+                                        <a href="https://t.me/RahNatamam_Baradaran" target="_blank" rel="noopener">RahNatamam_Baradaran</a>
                                     </p>
                                     <p class="mb-0">
-                                        آی‌دی پشتیبانی:
-                                        <span class="contact-id-list">
-                                            <a href="https://t.me/RahNatamam_Baradaran" target="_blank" rel="noopener">RahNatamam_Baradaran</a>
-                                            <span class="contact-separator">|</span>
-                                            <a href="https://ble.ir/RahNatamam_Baradaran" target="_blank" rel="noopener">RahNatamam_Baradaran</a>
-                                        </span>
+                                        بله:
+                                        <a href="https://ble.ir/RahNatamam_Baradaran" target="_blank" rel="noopener">RahNatamam_Baradaran</a>
                                     </p>
                                 </div>
 
