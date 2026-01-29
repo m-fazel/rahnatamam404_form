@@ -207,6 +207,7 @@ const handleRegistrationType = () => {
         spouseName,
         spouseNationalCode,
         spouseBirthDate,
+        childrenCount,
     } = getRefs();
     const studentModeInputs = getStudentModeInputs();
     const groupRequiredFields = getGroupRequiredFields();
@@ -222,6 +223,7 @@ const handleRegistrationType = () => {
     toggleRequired(spouseName, value === 'married');
     toggleRequired(spouseNationalCode, value === 'married');
     toggleRequired(spouseBirthDate, value === 'married');
+    toggleRequired(childrenCount, value === 'married');
     studentModeInputs.forEach((input) => {
         toggleRequired(input, value === 'student');
     });
@@ -324,10 +326,14 @@ const datePickerComponent = window.Vue3PersianDatetimePicker || window.VuePersia
 if (window.Vue && datePickerComponent) {
     const registrationApp = Vue.createApp({
         data() {
+            const maxBirthDate = window.moment
+                ? window.moment().subtract(15, 'years').format('jYYYY/jMM/jDD')
+                : '';
             return {
                 birthDate: '',
                 spouseBirthDate: '',
-                groupBirthDates: ['', '', '', ''],
+                groupBirthDates: ['', '', ''],
+                maxBirthDate,
             };
         },
     });
