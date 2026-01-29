@@ -188,13 +188,23 @@ body::after {
 }
 
 .contact-card a {
-    color: #0a4d79;
+    color: var(--brand-accent);
     font-weight: 600;
     text-decoration: none;
+    background: #0b3550;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 229, 72, 0.35);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .contact-card a:hover {
-    text-decoration: underline;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(15, 23, 42, 0.12);
+    background: #0a4568;
 }
 
 .form-text {
