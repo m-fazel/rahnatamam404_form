@@ -226,15 +226,18 @@ if ($registrationType === 'student' && $studentMode === 'group') {
     }
 }
 
+$enableDuplicateCheck = false;
 $submittedCodes = array_map(static fn ($record) => $record['code'], $submittedCodeRecords);
 
-if (count($submittedCodes) !== count(array_unique($submittedCodes))) {
-    exit('کد ملی تکراری در فرم وارد شده است.');
-}
+if ($enableDuplicateCheck) {
+    if (count($submittedCodes) !== count(array_unique($submittedCodes))) {
+        exit('کد ملی تکراری در فرم وارد شده است.');
+    }
 
-foreach ($submittedCodes as $code) {
-    if (is_registered_national_code($pdo, $code)) {
-        exit('کد ملی قبلا ثبت شده است و امکان ثبت مجدد وجود ندارد.');
+    foreach ($submittedCodes as $code) {
+        if (is_registered_national_code($pdo, $code)) {
+            exit('کد ملی قبلا ثبت شده است و امکان ثبت مجدد وجود ندارد.');
+        }
     }
 }
 
@@ -286,18 +289,20 @@ try {
         }
     }
 
-    try {
-        $codeStmt = $pdo->prepare('INSERT INTO national_codes (code, registration_id, role, created_at) VALUES (:code, :registration_id, :role, NOW())');
-        foreach ($submittedCodeRecords as $record) {
-            $codeStmt->execute([
-                ':code' => $record['code'],
-                ':registration_id' => $registrationId,
-                ':role' => $record['role'],
-            ]);
-        }
-    } catch (PDOException $e) {
-        if (($e->errorInfo[1] ?? null) !== 1146) {
-            throw $e;
+    if ($enableDuplicateCheck) {
+        try {
+            $codeStmt = $pdo->prepare('INSERT INTO national_codes (code, registration_id, role, created_at) VALUES (:code, :registration_id, :role, NOW())');
+            foreach ($submittedCodeRecords as $record) {
+                $codeStmt->execute([
+                    ':code' => $record['code'],
+                    ':registration_id' => $registrationId,
+                    ':role' => $record['role'],
+                ]);
+            }
+        } catch (PDOException $e) {
+            if (($e->errorInfo[1] ?? null) !== 1146) {
+                throw $e;
+            }
         }
     }
 
