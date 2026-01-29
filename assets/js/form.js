@@ -180,7 +180,7 @@ const updateAmount = () => {
     const details = [];
     if (registrationType.value === 'student') {
         const studentMode = document.querySelector('input[name="student_mode"]:checked');
-        details.push(`دانشجو - ${studentMode?.value === 'group' ? 'گروهی ۴ نفره' : 'انفرادی'}`);
+        details.push(`دانشجو - ${studentMode?.value === 'group' ? 'گروهی ۳ نفره' : 'انفرادی'}`);
         details.push(`ورودی ${entryYear?.value.replace('_or_before', ' و ماقبل')}`);
     } else if (registrationType.value === 'married') {
         details.push('ثبت نام متاهلین');
@@ -332,7 +332,7 @@ if (window.Vue && datePickerComponent) {
             return {
                 birthDate: '',
                 spouseBirthDate: '',
-                groupBirthDates: ['', '', ''],
+                groupBirthDates: ['', ''],
                 maxBirthDate,
             };
         },

@@ -156,8 +156,8 @@ $groupMembers = $_POST['group_members'] ?? [];
 $groupCount = (int) ($_POST['group_count'] ?? 0);
 
 if ($registrationType === 'student' && $studentMode === 'group') {
-    if ($groupCount !== 4 || !is_array($groupMembers) || count($groupMembers) !== 4) {
-        exit('ثبت نام گروهی فقط برای ۴ نفر امکان‌پذیر است.');
+    if ($groupCount !== 3 || !is_array($groupMembers) || count($groupMembers) !== 2) {
+        exit('ثبت نام گروهی فقط برای ۳ نفر امکان‌پذیر است.');
     }
 
     foreach ($groupMembers as $member) {

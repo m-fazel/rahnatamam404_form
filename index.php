@@ -64,7 +64,7 @@
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="student_mode" id="student_group" value="group" required>
-                                                    <label class="form-check-label" for="student_group">گروهی (۴ نفره)</label>
+                                                    <label class="form-check-label" for="student_group">گروهی (۳ نفره)</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -147,8 +147,8 @@
                                     </div>
 
                                     <div id="groupFields" class="d-none mt-4">
-                                        <h2 class="h5 fw-bold">مشخصات اعضای گروه (۴ نفره)</h2>
-                                        <input type="hidden" id="group_count" name="group_count" value="4">
+                                        <h2 class="h5 fw-bold">مشخصات اعضای گروه (۳ نفره)</h2>
+                                        <input type="hidden" id="group_count" name="group_count" value="3">
                                         <div class="row g-3">
                                             <div class="col-12">
                                                 <div class="member-card">
@@ -218,42 +218,6 @@
                                                         <div class="col-md-6">
                                                             <label class="form-label">شماره تماس</label>
                                                             <input type="tel" class="form-control group-required" name="group_members[1][mobile]" inputmode="numeric" maxlength="11" pattern="09\d{9}" placeholder="مثال: ۰۹۱۲۳۴۵۶۷۸۹">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="member-card">
-                                                    <h3 class="h6 fw-semibold">عضو ۴</h3>
-                                                    <div class="row g-3">
-                                                        <div class="col-md-6">
-                                                            <label class="form-label">نام</label>
-                                                            <input type="text" class="form-control group-required" name="group_members[2][first_name]" placeholder="نام عضو">
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label class="form-label">نام خانوادگی</label>
-                                                            <input type="text" class="form-control group-required" name="group_members[2][last_name]" placeholder="نام خانوادگی عضو">
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label class="form-label">جنسیت</label>
-                                                            <select class="form-select group-required" name="group_members[2][gender]">
-                                                                <option value="">انتخاب کنید</option>
-                                                                <option value="male">مرد</option>
-                                                                <option value="female">زن</option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label class="form-label">کد ملی</label>
-                                                            <input type="text" class="form-control group-required" name="group_members[2][national_code]" inputmode="numeric" maxlength="10" pattern="\d{10}" placeholder="مثال: ۰۰۱۲۳۴۵۶۷۸">
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label class="form-label">تاریخ تولد</label>
-                                                            <date-picker v-model="groupBirthDates[2]" format="jYYYY/jMM/jDD" display-format="jYYYY/jMM/jDD" input-class="form-control" placeholder="انتخاب تاریخ" :max="maxBirthDate" auto-submit color="#003e5f"></date-picker>
-                                                            <input type="hidden" class="group-required" name="group_members[2][birth_date]" :value="groupBirthDates[2]">
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <label class="form-label">شماره تماس</label>
-                                                            <input type="tel" class="form-control group-required" name="group_members[2][mobile]" inputmode="numeric" maxlength="11" pattern="09\d{9}" placeholder="مثال: ۰۹۱۲۳۴۵۶۷۸۹">
                                                         </div>
                                                     </div>
                                                 </div>
