@@ -187,12 +187,12 @@ body::after {
 }
 
 .vpd-main .vpd-content {
-    border-radius: 7px;
+    border-radius: 0.9rem;
 }
 
 .vpd-main .vpd-header {
-    border-top-left-radius: 7px;
-    border-top-right-radius: 7px;
+    border-top-left-radius: 0.9rem;
+    border-top-right-radius: 0.9rem;
 }
 
 #amountDetails {
