@@ -201,6 +201,18 @@ body::after {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.contact-id-list {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-right: 0.35rem;
+}
+
+.contact-separator {
+    color: rgba(31, 41, 55, 0.5);
+}
+
 .contact-card a:hover {
     transform: translateY(-1px);
     box-shadow: 0 6px 12px rgba(15, 23, 42, 0.12);
@@ -240,4 +252,25 @@ body::after {
 
 #amountDetails {
     color: #ffffff;
+}
+
+@media (max-width: 576px) {
+    .contact-id-list {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+        margin-right: 0;
+        margin-top: 0.5rem;
+        width: 100%;
+    }
+
+    .contact-id-list a {
+        width: 100%;
+        justify-content: center;
+        padding: 0.35rem 0.75rem;
+    }
+
+    .contact-separator {
+        display: none;
+    }
 }
