@@ -43,8 +43,22 @@
                                 </div>
                                 <div class="info-card contact-card mb-4">
                                     <h2 class="h6 fw-bold mb-2">راه‌های ارتباطی اردو</h2>
-                                    <p class="mb-1">آی‌دی کانال اردو در تلگرام و بله: <a href="https://t.me/Rah_Natamam_1404" target="_blank" rel="noopener">Rah_Natamam_1404</a> | <a href="https://ble.ir/Rah_Natamam_1404" target="_blank" rel="noopener">Rah_Natamam_1404</a></p>
-                                    <p class="mb-0">آی‌دی پشتیبانی در تلگرام و بله: <a href="https://t.me/RahNatamam_Baradaran" target="_blank" rel="noopener">RahNatamam_Baradaran</a> | <a href="https://ble.ir/RahNatamam_Baradaran" target="_blank" rel="noopener">RahNatamam_Baradaran</a></p>
+                                    <p class="mb-1">
+                                        آی‌دی کانال اردو در تلگرام و بله:
+                                        <span class="contact-id-list">
+                                            <a href="https://t.me/Rah_Natamam_1404" target="_blank" rel="noopener">Rah_Natamam_1404</a>
+                                            <span class="contact-separator">|</span>
+                                            <a href="https://ble.ir/Rah_Natamam_1404" target="_blank" rel="noopener">Rah_Natamam_1404</a>
+                                        </span>
+                                    </p>
+                                    <p class="mb-0">
+                                        آی‌دی پشتیبانی در تلگرام و بله:
+                                        <span class="contact-id-list">
+                                            <a href="https://t.me/RahNatamam_Baradaran" target="_blank" rel="noopener">RahNatamam_Baradaran</a>
+                                            <span class="contact-separator">|</span>
+                                            <a href="https://ble.ir/RahNatamam_Baradaran" target="_blank" rel="noopener">RahNatamam_Baradaran</a>
+                                        </span>
+                                    </p>
                                 </div>
 
                                 <form action="submit.php" method="post" id="registrationForm">
