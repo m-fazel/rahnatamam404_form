@@ -2,6 +2,7 @@ const getRefs = () => ({
     registrationType: document.getElementById('registration_type'),
     studentFields: document.getElementById('studentFields'),
     marriedFields: document.getElementById('marriedFields'),
+    marriedStatusField: document.getElementById('marriedStatusField'),
     groupFields: document.getElementById('groupFields'),
     entryYear: document.getElementById('entry_year'),
     marriedStatus: document.getElementById('married_status'),
@@ -40,6 +41,27 @@ const toggleRequired = (element, isRequired) => {
     } else {
         element.removeAttribute('required');
     }
+};
+
+const clearFieldValue = (field) => {
+    if (!field) {
+        return;
+    }
+    if (field instanceof HTMLInputElement) {
+        if (field.type === 'checkbox' || field.type === 'radio') {
+            field.checked = false;
+        } else {
+            field.value = '';
+        }
+        return;
+    }
+    if (field instanceof HTMLSelectElement || field instanceof HTMLTextAreaElement) {
+        field.value = '';
+    }
+};
+
+const clearFields = (fields) => {
+    fields.forEach((field) => clearFieldValue(field));
 };
 
 const digitMap = {
@@ -170,7 +192,7 @@ const updateAmount = () => {
     }
 
     const children = registrationType.value === 'married' ? Math.max(parseInt(childrenCount?.value || 0, 10), 0) : 0;
-    const amount = base * 1000 + (children * 500000);
+    const amount = base * 1000;
 
     finalAmount.textContent = `${amount.toLocaleString('fa-IR')} تومان`;
 
@@ -193,11 +215,14 @@ const updateAmount = () => {
     amountDetails.textContent = details.join(' · ');
 };
 
+let registrationAppInstance = null;
+
 const handleRegistrationType = () => {
     const {
         registrationType,
         studentFields,
         marriedFields,
+        marriedStatusField,
         groupFields,
         entryYear,
         marriedStatus,
@@ -208,11 +233,12 @@ const handleRegistrationType = () => {
     } = getRefs();
     const studentModeInputs = getStudentModeInputs();
     const groupRequiredFields = getGroupRequiredFields();
-    if (!registrationType || !studentFields || !marriedFields || !groupFields) {
+    if (!registrationType || !studentFields || !marriedFields || !groupFields || !marriedStatusField) {
         return;
     }
     const value = registrationType.value;
     studentFields.classList.toggle('d-none', value !== 'student');
+    marriedStatusField.classList.toggle('d-none', value !== 'married');
     marriedFields.classList.toggle('d-none', value !== 'married');
 
     toggleRequired(entryYear, value === 'student');
@@ -229,10 +255,22 @@ const handleRegistrationType = () => {
         studentModeInputs.forEach((input) => {
             input.checked = false;
         });
+        clearFields([entryYear]);
         groupFields.classList.add('d-none');
         groupRequiredFields.forEach((field) => {
             toggleRequired(field, false);
         });
+        clearFields(Array.from(groupRequiredFields));
+        if (registrationAppInstance) {
+            registrationAppInstance.groupBirthDates = ['', ''];
+        }
+    }
+
+    if (value !== 'married') {
+        clearFields([marriedStatus, spouseName, spouseNationalCode, spouseBirthDate, childrenCount]);
+        if (registrationAppInstance) {
+            registrationAppInstance.spouseBirthDate = '';
+        }
     }
 
     updateAmount();
@@ -250,6 +288,12 @@ const handleStudentMode = () => {
     groupRequiredFields.forEach((field) => {
         toggleRequired(field, isGroup);
     });
+    if (!isGroup) {
+        clearFields(Array.from(groupRequiredFields));
+        if (registrationAppInstance) {
+            registrationAppInstance.groupBirthDates = ['', ''];
+        }
+    }
     updateAmount();
 };
 
@@ -335,7 +379,7 @@ if (window.Vue && datePickerComponent) {
         },
     });
     registrationApp.component('date-picker', datePickerComponent);
-    registrationApp.mount('#registrationApp');
+    registrationAppInstance = registrationApp.mount('#registrationApp');
     initializeForm();
 } else {
     initializeForm();

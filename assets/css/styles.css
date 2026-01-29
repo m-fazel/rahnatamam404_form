@@ -4,8 +4,26 @@
     --brand-light: #ffffff;
 }
 
+@font-face {
+    font-family: "Pinar";
+    src: url("../fonts/Pinar-Regular.woff2") format("woff2"),
+        url("../fonts/Pinar-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Pinar";
+    src: url("../fonts/Pinar-Bold.woff2") format("woff2"),
+        url("../fonts/Pinar-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
 body {
-    font-family: "Vazirmatn", "Tahoma", sans-serif;
+    font-family: "Pinar", "Vazirmatn", "Tahoma", sans-serif;
     min-height: 100vh;
     color: var(--brand-light);
     background-color: #0a2a3d;
@@ -162,6 +180,21 @@ body::after {
     padding: 1.25rem;
     background-color: #fff;
     box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.contact-card {
+    background: #f8fafc;
+    color: #1f2937;
+}
+
+.contact-card a {
+    color: #0a4d79;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.contact-card a:hover {
+    text-decoration: underline;
 }
 
 .form-text {
