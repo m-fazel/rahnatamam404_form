@@ -161,7 +161,7 @@
                                             <div class="col-md-6">
                                                 <label class="form-label">تعداد فرزندان (درصورت وجود)</label>
                                                 <input type="number" class="form-control" name="children_count" id="children_count" min="0" value="0" placeholder="مثال: ۰">
-                                                <div class="form-text">قبل از ثبت تعداد فرزندان حتما با پشتیبانی اردو در ارتباط باشید و اعلام کنید بهشون.</div>
+                                                <div class="form-text">جهت ثبت‌نام نهایی و حضور فرزندان در اردو، حتما جهت ثبت اطلاعات فرزندان با اکانت پشتیبانی در ارتباط باشید.</div>
                                             </div>
                                         </div>
                                     </div>
