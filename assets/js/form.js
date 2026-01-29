@@ -170,7 +170,7 @@ const updateAmount = () => {
     }
 
     const children = registrationType.value === 'married' ? Math.max(parseInt(childrenCount?.value || 0, 10), 0) : 0;
-    const amount = base * 1000 + (children * 50000);
+    const amount = base * 1000 + (children * 500000);
 
     finalAmount.textContent = `${amount.toLocaleString('fa-IR')} تومان`;
 

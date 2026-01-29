@@ -117,7 +117,7 @@ function calculate_amount($registrationType, $studentMode, $entryYear, $marriedS
         $base = $amountTable[$registrationType] ?? 0;
     }
 
-    $childrenTotal = max((int) $childrenCount, 0) * 500000;
+    $childrenTotal = max((int) $childrenCount, 0) * 5000000;
     return ($base * 10000) + $childrenTotal;
 }
 
