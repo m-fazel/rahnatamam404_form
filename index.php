@@ -217,29 +217,6 @@ unset($_SESSION['form_error']);
                                         </div>
                                     </div>
 
-                                    <div class="mt-4">
-                                        <div class="info-card final-card final-card-light">
-                                            <h2 class="h6 mb-2">مبلغ نهایی شما</h2>
-                                            <p class="final-amount" id="finalAmount">—</p>
-                                            <p class="small mb-0" id="amountDetails">نوع ثبت نام و گزینه‌ها را انتخاب کنید.</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="mt-4">
-                                        <h2 class="h5 fw-bold">کد امنیتی</h2>
-                                        <div class="row g-3 align-items-center">
-                                            <div class="col-md-4">
-                                                <div class="security-code-box" aria-label="کد امنیتی">
-                                                    <img class="security-code-image" src="captcha.php?v=<?php echo time(); ?>" alt="تصویر کد امنیتی">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <label class="form-label">کد امنیتی را وارد کنید</label>
-                                                <input type="text" class="form-control" name="security_code" inputmode="text" maxlength="5" pattern="[A-Za-z0-9]{5}" placeholder="" required>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                     <div id="groupFields" class="d-none mt-4">
                                         <h2 class="h5 fw-bold">مشخصات اعضای گروه (۳ نفره)</h2>
                                         <input type="hidden" id="group_count" name="group_count" value="3">
@@ -381,6 +358,29 @@ unset($_SESSION['form_error']);
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <div class="info-card final-card final-card-light">
+                                            <h2 class="h6 mb-2">مبلغ نهایی شما</h2>
+                                            <p class="final-amount" id="finalAmount">—</p>
+                                            <p class="small mb-0" id="amountDetails">نوع ثبت نام و گزینه‌ها را انتخاب کنید.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <h2 class="h5 fw-bold">کد امنیتی</h2>
+                                        <div class="row g-3 align-items-center">
+                                            <div class="col-md-4">
+                                                <div class="security-code-box" aria-label="کد امنیتی">
+                                                    <img class="security-code-image" src="captcha.php?v=<?php echo time(); ?>" alt="تصویر کد امنیتی">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <label class="form-label">کد امنیتی را وارد کنید</label>
+                                                <input type="text" class="form-control" name="security_code" inputmode="text" maxlength="5" pattern="[A-Za-z0-9]{5}" placeholder="" required>
                                             </div>
                                         </div>
                                     </div>
