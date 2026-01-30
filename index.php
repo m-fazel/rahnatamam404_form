@@ -11,7 +11,7 @@ unset($_SESSION['form_error']);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ثبت نام نهایی اردوی راه‌ناتمام ۱۴۰۴</title>
     <link href="assets/bootstrap/bootstrap.rtl.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet">
+    <link href="assets/css/glightbox.min.css" rel="stylesheet">
     <link href="assets/css/styles.css" rel="stylesheet">
 </head>
 <body>
@@ -400,7 +400,7 @@ unset($_SESSION['form_error']);
     <script src="assets/js/moment-jalaali.js"></script>
     <script src="assets/js/vue3-persian-datetime-picker.umd.min.js"></script>
     <script src="assets/bootstrap/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+    <script src="assets/js/glightbox.min.js"></script>
     <script src="assets/js/form.js"></script>
 </body>
 </html>
