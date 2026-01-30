@@ -126,7 +126,7 @@ unset($_SESSION['form_error']);
                                     </div>
                                     <div id="alumniExtraFields" class="d-none mb-3">
                                         <label for="alumni_entry_year" class="form-label fw-semibold">ورودی چه سالی بوده‌اید؟</label>
-                                        <input type="number" class="form-control" id="alumni_entry_year" name="alumni_entry_year" min="1345" max="1404" placeholder="مثال: ۱۳۸۸">
+                                        <input type="number" class="form-control" id="alumni_entry_year" name="alumni_entry_year" min="1345" max="1404" placeholder="">
                                         <div class="form-text">سال ورودی را بین ۱۳۴۵ تا ۱۴۰۴ وارد کنید.</div>
                                     </div>
 
@@ -184,7 +184,7 @@ unset($_SESSION['form_error']);
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">کد ملی</label>
-                                                <input type="text" class="form-control" name="national_code" inputmode="numeric" maxlength="10" pattern="\d{10}" placeholder="مثال: ۰۰۱۲۳۴۵۶۷۸" required>
+                                                <input type="text" class="form-control" name="national_code" inputmode="numeric" maxlength="10" pattern="\d{10}" placeholder="" required>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">تاریخ تولد</label>
@@ -193,7 +193,7 @@ unset($_SESSION['form_error']);
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">شماره تماس</label>
-                                                <input type="tel" class="form-control" name="mobile" inputmode="numeric" maxlength="11" pattern="09\d{9}" placeholder="مثال: ۰۹۱۲۳۴۵۶۷۸۹" required>
+                                                <input type="tel" class="form-control" name="mobile" inputmode="numeric" maxlength="11" pattern="09\d{9}" placeholder="۰۹۱۲۳۴۵۶۷۸۹" required>
                                             </div>
                                         </div>
                                     </div>
@@ -207,7 +207,7 @@ unset($_SESSION['form_error']);
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">کد ملی همسر</label>
-                                                <input type="text" class="form-control" name="spouse_national_code" id="spouse_national_code" inputmode="numeric" maxlength="10" pattern="\d{10}" placeholder="مثال: ۰۰۱۲۳۴۵۶۷۸">
+                                                <input type="text" class="form-control" name="spouse_national_code" id="spouse_national_code" inputmode="numeric" maxlength="10" pattern="\d{10}" placeholder="">
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">تاریخ تولد همسر</label>
@@ -216,7 +216,7 @@ unset($_SESSION['form_error']);
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">تعداد فرزندان (درصورت وجود)</label>
-                                                <input type="number" class="form-control" name="children_count" id="children_count" min="0" value="0" placeholder="مثال: ۰">
+                                                <input type="number" class="form-control" name="children_count" id="children_count" min="0" value="0" placeholder="">
                                                 <div class="form-text">جهت ثبت‌نام نهایی و حضور فرزندان در اردو، حتما جهت ثبت اطلاعات فرزندان با اکانت پشتیبانی در ارتباط باشید.</div>
                                             </div>
                                         </div>
@@ -232,7 +232,7 @@ unset($_SESSION['form_error']);
                                             </div>
                                             <div class="col-md-8">
                                                 <label class="form-label">کد امنیتی را وارد کنید</label>
-                                                <input type="text" class="form-control" name="security_code" inputmode="text" maxlength="5" pattern="[A-Za-z0-9]{5}" placeholder="مثال: A7B3C" required>
+                                                <input type="text" class="form-control" name="security_code" inputmode="text" maxlength="5" pattern="[A-Za-z0-9]{5}" placeholder="" required>
                                             </div>
                                         </div>
                                     </div>
@@ -263,7 +263,7 @@ unset($_SESSION['form_error']);
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">کد ملی</label>
-                                                            <input type="text" class="form-control group-required" name="group_members[0][national_code]" inputmode="numeric" maxlength="10" pattern="\d{10}" placeholder="مثال: ۰۰۱۲۳۴۵۶۷۸">
+                                                            <input type="text" class="form-control group-required" name="group_members[0][national_code]" inputmode="numeric" maxlength="10" pattern="\d{10}" placeholder="">
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">تاریخ تولد</label>
@@ -272,7 +272,7 @@ unset($_SESSION['form_error']);
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">شماره تماس</label>
-                                                            <input type="tel" class="form-control group-required" name="group_members[0][mobile]" inputmode="numeric" maxlength="11" pattern="09\d{9}" placeholder="مثال: ۰۹۱۲۳۴۵۶۷۸۹">
+                                                            <input type="tel" class="form-control group-required" name="group_members[0][mobile]" inputmode="numeric" maxlength="11" pattern="09\d{9}" placeholder="۰۹۱۲۳۴۵۶۷۸۹">
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">مقطع تحصیلی</label>
@@ -332,7 +332,7 @@ unset($_SESSION['form_error']);
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">کد ملی</label>
-                                                            <input type="text" class="form-control group-required" name="group_members[1][national_code]" inputmode="numeric" maxlength="10" pattern="\d{10}" placeholder="مثال: ۰۰۱۲۳۴۵۶۷۸">
+                                                            <input type="text" class="form-control group-required" name="group_members[1][national_code]" inputmode="numeric" maxlength="10" pattern="\d{10}" placeholder="">
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">تاریخ تولد</label>
@@ -341,7 +341,7 @@ unset($_SESSION['form_error']);
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">شماره تماس</label>
-                                                            <input type="tel" class="form-control group-required" name="group_members[1][mobile]" inputmode="numeric" maxlength="11" pattern="09\d{9}" placeholder="مثال: ۰۹۱۲۳۴۵۶۷۸۹">
+                                                            <input type="tel" class="form-control group-required" name="group_members[1][mobile]" inputmode="numeric" maxlength="11" pattern="09\d{9}" placeholder="۰۹۱۲۳۴۵۶۷۸۹">
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="form-label">مقطع تحصیلی</label>
