@@ -287,11 +287,18 @@ body::after {
     color: #0f172a;
     border-radius: 0.75rem;
     border: 1px dashed #cbd5f5;
-    font-weight: 700;
-    font-size: 1.3rem;
     text-align: center;
     padding: 0.75rem 1rem;
-    letter-spacing: 0.2rem;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.security-code-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
 }
 
 @media (max-width: 576px) {

@@ -225,6 +225,20 @@ const updateAmount = () => {
 
 let registrationAppInstance = null;
 
+const updateStudentMajorVisibility = () => {
+    const { registrationType, majorField, academicMajor, academicLevelStudent } = getRefs();
+    if (!majorField || !registrationType) {
+        return;
+    }
+    const isBachelor = academicLevelStudent?.value === 'bachelor';
+    const shouldShow = registrationType.value === 'student' && isBachelor;
+    majorField.classList.toggle('d-none', !shouldShow);
+    toggleRequired(academicMajor, shouldShow);
+    if (!shouldShow) {
+        clearFields([academicMajor]);
+    }
+};
+
 const handleRegistrationType = () => {
     const {
         registrationType,
@@ -256,9 +270,6 @@ const handleRegistrationType = () => {
     studentFields.classList.toggle('d-none', value !== 'student');
     marriedStatusField.classList.toggle('d-none', value !== 'married');
     marriedFields.classList.toggle('d-none', value !== 'married');
-    if (majorField) {
-        majorField.classList.toggle('d-none', value !== 'student');
-    }
     if (alumniMajorField) {
         alumniMajorField.classList.toggle('d-none', value !== 'alumni');
     }
@@ -267,7 +278,6 @@ const handleRegistrationType = () => {
     }
 
     toggleRequired(entryYear, value === 'student');
-    toggleRequired(academicMajor, value === 'student');
     toggleRequired(academicLevelStudent, value === 'student');
     toggleRequired(alumniMajor, value === 'alumni');
     toggleRequired(alumniEntryYear, value === 'alumni');
@@ -307,6 +317,7 @@ const handleRegistrationType = () => {
         clearFields([alumniMajor, alumniEntryYear, academicLevelAlumni]);
     }
 
+    updateStudentMajorVisibility();
     updateAmount();
 };
 
@@ -346,6 +357,9 @@ document.addEventListener('change', (event) => {
     }
     if (target.id === 'entry_year' || target.id === 'married_status') {
         updateAmount();
+    }
+    if (target.id === 'academic_level_student') {
+        updateStudentMajorVisibility();
     }
 });
 document.addEventListener('input', (event) => {

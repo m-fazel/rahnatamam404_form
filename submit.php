@@ -144,6 +144,9 @@ $academicLevel = '';
 if ($registrationType === 'student') {
     $academicMajor = clean_input($_POST['academic_major'] ?? '');
     $academicLevel = clean_input($_POST['academic_level_student'] ?? '');
+    if ($academicLevel !== 'bachelor') {
+        $academicMajor = '';
+    }
 } elseif ($registrationType === 'alumni') {
     $academicMajor = clean_input($_POST['alumni_major'] ?? '');
     $academicLevel = clean_input($_POST['academic_level_alumni'] ?? '');
@@ -172,11 +175,11 @@ if ($registrationType === 'student') {
     if ($studentMode === '' || $entryYear === '') {
         redirect_with_error('لطفا نوع ثبت نام دانشجو و سال ورودی را مشخص کنید.');
     }
-    if ($academicMajor === '') {
-        redirect_with_error('لطفا رشته تحصیلی دانشجو را مشخص کنید.');
-    }
     if ($academicLevel === '') {
         redirect_with_error('لطفا مقطع تحصیلی دانشجو را مشخص کنید.');
+    }
+    if ($academicLevel === 'bachelor' && $academicMajor === '') {
+        redirect_with_error('لطفا رشته تحصیلی دانشجو را مشخص کنید.');
     }
 }
 
