@@ -41,6 +41,13 @@ function sanitize_numeric($value)
     return preg_replace('/\D+/', '', $normalized);
 }
 
+function normalize_captcha($value)
+{
+    $normalized = normalize_digits($value);
+    $normalized = preg_replace('/\s+/', '', (string) $normalized);
+    return strtoupper($normalized);
+}
+
 function is_valid_national_code($value)
 {
     $code = sanitize_numeric($value);
@@ -159,8 +166,8 @@ $gender = clean_input($_POST['gender'] ?? '');
 $nationalCode = sanitize_numeric($_POST['national_code'] ?? '');
 $birthDate = clean_input($_POST['birth_date'] ?? '');
 $mobile = sanitize_numeric($_POST['mobile'] ?? '');
-$securityCode = sanitize_numeric($_POST['security_code'] ?? '');
-$sessionCode = $_SESSION['security_code'] ?? '';
+$securityCode = normalize_captcha($_POST['security_code'] ?? '');
+$sessionCode = normalize_captcha($_SESSION['security_code'] ?? '');
 
 $spouseName = $registrationType === 'married' ? clean_input($_POST['spouse_name'] ?? '') : '';
 $spouseNationalCode = $registrationType === 'married' ? sanitize_numeric($_POST['spouse_national_code'] ?? '') : '';

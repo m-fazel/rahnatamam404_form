@@ -1,10 +1,6 @@
 <?php
 session_start();
 
-if (empty($_SESSION['security_code'])) {
-    $_SESSION['security_code'] = (string) random_int(10000, 99999);
-}
-
 $formError = $_SESSION['form_error'] ?? '';
 unset($_SESSION['form_error']);
 ?>
@@ -127,6 +123,15 @@ unset($_SESSION['form_error']);
                                                 <option value="1402_or_before">ورودی ۱۴۰۲ و ماقبل</option>
                                             </select>
                                         </div>
+                                        <div class="mb-3">
+                                            <label for="academic_level_student" class="form-label fw-semibold">مقطع تحصیلی</label>
+                                            <select class="form-select" id="academic_level_student" name="academic_level_student">
+                                                <option value="">انتخاب کنید</option>
+                                                <option value="bachelor">کارشناسی</option>
+                                                <option value="masters">کارشناسی ارشد</option>
+                                                <option value="phd">دکتری</option>
+                                            </select>
+                                        </div>
                                         <div id="majorField" class="mb-3">
                                             <label for="academic_major" class="form-label fw-semibold">رشته تحصیلی</label>
                                             <select class="form-select" id="academic_major" name="academic_major">
@@ -145,15 +150,6 @@ unset($_SESSION['form_error']);
                                                 <option value="materials">مهندسی مواد و متالوژی</option>
                                                 <option value="physics">فیزیک</option>
                                                 <option value="chemistry">شیمی</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="academic_level_student" class="form-label fw-semibold">مقطع تحصیلی</label>
-                                            <select class="form-select" id="academic_level_student" name="academic_level_student">
-                                                <option value="">انتخاب کنید</option>
-                                                <option value="bachelor">کارشناسی</option>
-                                                <option value="masters">کارشناسی ارشد</option>
-                                                <option value="phd">دکتری</option>
                                             </select>
                                         </div>
                                     </div>
@@ -259,7 +255,7 @@ unset($_SESSION['form_error']);
                                             </div>
                                             <div class="col-md-8">
                                                 <label class="form-label">کد امنیتی را وارد کنید</label>
-                                                <input type="text" class="form-control" name="security_code" inputmode="numeric" maxlength="5" pattern="\d{5}" placeholder="مثال: ۱۲۳۴۵" required>
+                                                <input type="text" class="form-control" name="security_code" inputmode="text" maxlength="5" pattern="[A-Za-z0-9]{5}" placeholder="مثال: A7B3C" required>
                                             </div>
                                         </div>
                                     </div>
