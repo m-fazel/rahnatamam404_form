@@ -5,9 +5,10 @@ const getRefs = () => ({
     marriedStatusField: document.getElementById('marriedStatusField'),
     groupFields: document.getElementById('groupFields'),
     entryYear: document.getElementById('entry_year'),
+    academicLevelField: document.getElementById('academicLevelField'),
+    academicMajorField: document.getElementById('academicMajorField'),
     academicMajor: document.getElementById('academic_major'),
     academicLevel: document.getElementById('academic_level'),
-    academicFields: document.getElementById('academicFields'),
     alumniExtraFields: document.getElementById('alumniExtraFields'),
     alumniEntryYear: document.getElementById('alumni_entry_year'),
     marriedStatus: document.getElementById('married_status'),
@@ -230,9 +231,10 @@ const handleRegistrationType = () => {
         marriedStatusField,
         groupFields,
         entryYear,
+        academicLevelField,
+        academicMajorField,
         academicMajor,
         academicLevel,
-        academicFields,
         alumniExtraFields,
         alumniEntryYear,
         marriedStatus,
@@ -250,8 +252,11 @@ const handleRegistrationType = () => {
     studentFields.classList.toggle('d-none', value !== 'student');
     marriedStatusField.classList.toggle('d-none', value !== 'married');
     marriedFields.classList.toggle('d-none', value !== 'married');
-    if (academicFields) {
-        academicFields.classList.toggle('d-none', value !== 'student' && value !== 'alumni');
+    if (academicLevelField) {
+        academicLevelField.classList.toggle('d-none', value !== 'student' && value !== 'alumni');
+    }
+    if (academicMajorField) {
+        academicMajorField.classList.toggle('d-none', value !== 'student' && value !== 'alumni');
     }
     if (alumniExtraFields) {
         alumniExtraFields.classList.toggle('d-none', value !== 'alumni');
