@@ -23,11 +23,6 @@ unset($_SESSION['form_error']);
                         <span class="hero-badge">ثبت نام نهایی</span>
                         <h1 class="hero-title">اردوی راه‌ناتمام ۱۴۰۴</h1>
                         <p class="hero-subtitle">اطلاعات را با دقت تکمیل کنید تا مبلغ نهایی و پرداخت در همان لحظه برایتان نمایش داده شود.</p>
-                        <div class="info-card final-card mt-4">
-                            <h2 class="h6 mb-2">مبلغ نهایی شما</h2>
-                            <p class="final-amount" id="finalAmount">—</p>
-                            <p class="small text-white mb-0" id="amountDetails">نوع ثبت نام و گزینه‌ها را انتخاب کنید.</p>
-                        </div>
                     </div>
                     <div class="hero-aside">
                         <div class="info-card poster-card">
@@ -219,6 +214,14 @@ unset($_SESSION['form_error']);
                                                 <input type="number" class="form-control" name="children_count" id="children_count" min="0" value="0" placeholder="">
                                                 <div class="form-text">جهت ثبت‌نام نهایی و حضور فرزندان در اردو، حتما جهت ثبت اطلاعات فرزندان با اکانت پشتیبانی در ارتباط باشید.</div>
                                             </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <div class="info-card final-card final-card-light">
+                                            <h2 class="h6 mb-2">مبلغ نهایی شما</h2>
+                                            <p class="final-amount" id="finalAmount">—</p>
+                                            <p class="small mb-0" id="amountDetails">نوع ثبت نام و گزینه‌ها را انتخاب کنید.</p>
                                         </div>
                                     </div>
 
