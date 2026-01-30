@@ -177,10 +177,6 @@ body::after {
     border-radius: 1.5rem;
 }
 
-.alert-top {
-    background: rgba(255, 255, 255, 0.85);
-}
-
 .form-alert {
     border-radius: 0.9rem;
     border: none;
