@@ -23,11 +23,6 @@ unset($_SESSION['form_error']);
                         <span class="hero-badge">ثبت نام نهایی</span>
                         <h1 class="hero-title">اردوی راه‌ناتمام ۱۴۰۴</h1>
                         <p class="hero-subtitle">اطلاعات را با دقت تکمیل کنید تا مبلغ نهایی و پرداخت در همان لحظه برایتان نمایش داده شود.</p>
-                        <div class="info-card final-card mt-4">
-                            <h2 class="h6 mb-2">مبلغ نهایی شما</h2>
-                            <p class="final-amount" id="finalAmount">—</p>
-                            <p class="small text-white mb-0" id="amountDetails">نوع ثبت نام و گزینه‌ها را انتخاب کنید.</p>
-                        </div>
                     </div>
                     <div class="hero-aside">
                         <div class="info-card poster-card">
@@ -80,6 +75,31 @@ unset($_SESSION['form_error']);
                                 </div>
 
                                 <form action="submit.php" method="post" id="registrationForm">
+                                    <div class="row g-4 align-items-stretch mb-4 form-summary">
+                                        <div class="col-lg-6">
+                                            <div class="info-card final-card h-100">
+                                                <h2 class="h6 mb-2">مبلغ نهایی شما</h2>
+                                                <p class="final-amount" id="finalAmount">—</p>
+                                                <p class="small text-white mb-0" id="amountDetails">نوع ثبت نام و گزینه‌ها را انتخاب کنید.</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="info-card h-100">
+                                                <h2 class="h6 fw-bold mb-3">کد امنیتی</h2>
+                                                <div class="row g-3 align-items-center">
+                                                    <div class="col-md-5">
+                                                        <div class="security-code-box" aria-label="کد امنیتی">
+                                                            <img class="security-code-image" src="captcha.php?v=<?php echo time(); ?>" alt="تصویر کد امنیتی">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <label class="form-label">کد امنیتی را وارد کنید</label>
+                                                        <input type="text" class="form-control" name="security_code" inputmode="text" maxlength="5" pattern="[A-Za-z0-9]{5}" placeholder="" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="mb-3">
                                         <label for="registration_type" class="form-label fw-semibold">نوع ثبت نام</label>
                                         <select class="form-select" id="registration_type" name="registration_type" required>
@@ -218,21 +238,6 @@ unset($_SESSION['form_error']);
                                                 <label class="form-label">تعداد فرزندان (درصورت وجود)</label>
                                                 <input type="number" class="form-control" name="children_count" id="children_count" min="0" value="0" placeholder="">
                                                 <div class="form-text">جهت ثبت‌نام نهایی و حضور فرزندان در اردو، حتما جهت ثبت اطلاعات فرزندان با اکانت پشتیبانی در ارتباط باشید.</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mt-4">
-                                        <h2 class="h5 fw-bold">کد امنیتی</h2>
-                                        <div class="row g-3 align-items-center">
-                                            <div class="col-md-4">
-                                                <div class="security-code-box" aria-label="کد امنیتی">
-                                                    <img class="security-code-image" src="captcha.php?v=<?php echo time(); ?>" alt="تصویر کد امنیتی">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <label class="form-label">کد امنیتی را وارد کنید</label>
-                                                <input type="text" class="form-control" name="security_code" inputmode="text" maxlength="5" pattern="[A-Za-z0-9]{5}" placeholder="" required>
                                             </div>
                                         </div>
                                     </div>

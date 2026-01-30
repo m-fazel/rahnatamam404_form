@@ -142,6 +142,10 @@ body::after {
     margin-top: 2rem;
 }
 
+.form-summary .final-card {
+    margin-top: 0;
+}
+
 .final-amount {
     font-size: 2rem;
     font-weight: 700;
