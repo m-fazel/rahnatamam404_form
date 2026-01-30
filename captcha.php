@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-const CAPTCHA_WIDTH = 350;
+const CAPTCHA_WIDTH = 200;
 const CAPTCHA_HEIGHT = 50;
 const CAPTCHA_FONT = __DIR__ . '/assets/fonts/Pinar-Regular.ttf';
 
@@ -79,8 +79,6 @@ if (!file_exists(CAPTCHA_FONT)) {
     exit;
 }
 
-if (empty($_SESSION['security_code'])) {
-    $_SESSION['security_code'] = generate_captcha_code(5, 2);
-}
+$_SESSION['security_code'] = generate_captcha_code(5, 1);
 
 output_captcha_image($_SESSION['security_code'], CAPTCHA_FONT);
