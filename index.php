@@ -23,6 +23,11 @@ unset($_SESSION['form_error']);
                         <span class="hero-badge">ثبت نام نهایی</span>
                         <h1 class="hero-title">اردوی راه‌ناتمام ۱۴۰۴</h1>
                         <p class="hero-subtitle">اطلاعات را با دقت تکمیل کنید تا مبلغ نهایی و پرداخت در همان لحظه برایتان نمایش داده شود.</p>
+                        <div class="info-card final-card mt-4">
+                            <h2 class="h6 mb-2">مبلغ نهایی شما</h2>
+                            <p class="final-amount" id="finalAmount">—</p>
+                            <p class="small text-white mb-0" id="amountDetails">نوع ثبت نام و گزینه‌ها را انتخاب کنید.</p>
+                        </div>
                     </div>
                     <div class="hero-aside">
                         <div class="info-card poster-card">
@@ -30,11 +35,6 @@ unset($_SESSION['form_error']);
                                 <img src="assets/images/poster.jpg" alt="پوستر اردوی راه‌ناتمام ۱۴۰۴">
                             </a>
                             <p class="poster-caption">برای مشاهده پوستر در اندازه بزرگ‌تر، روی تصویر کلیک کنید.</p>
-                        </div>
-                        <div class="info-card final-card">
-                            <h2 class="h6 mb-2">مبلغ نهایی شما</h2>
-                            <p class="final-amount" id="finalAmount">—</p>
-                            <p class="small text-white mb-0" id="amountDetails">نوع ثبت نام و گزینه‌ها را انتخاب کنید.</p>
                         </div>
                     </div>
                 </div>

@@ -63,7 +63,7 @@ body::after {
 .hero-content {
     display: grid;
     gap: 2rem;
-    align-items: center;
+    align-items: end;
 }
 
 @media (min-width: 992px) {
@@ -139,6 +139,7 @@ body::after {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin-top: 2rem;
 }
 
 .final-amount {
