@@ -221,14 +221,14 @@ if (!is_valid_mobile($mobile)) {
 }
 
 if ($securityCode === '' || $securityCode !== $sessionCode) {
-    redirect_with_error(message: 'کد امنیتی وارد شده صحیح نیست.');
+    redirect_with_error('کد امنیتی وارد شده صحیح نیست.');
 }
 
 $groupMembers = $_POST['group_members'] ?? [];
 $groupCount = (int) ($_POST['group_count'] ?? 0);
 
 if ($registrationType === 'student' && $studentMode === 'group') {
-    if ($groupCount !== 3 || !is_array(value: $groupMembers) || count($groupMembers) !== 2) {
+    if ($groupCount !== 3 || !is_array($groupMembers) || count($groupMembers) !== 2) {
         redirect_with_error('ثبت نام گروهی فقط برای ۳ نفر امکان‌پذیر است.');
     }
 

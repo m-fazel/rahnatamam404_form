@@ -47,7 +47,7 @@ unset($_SESSION['form_error']);
                                         <?php echo htmlspecialchars($formError, ENT_QUOTES, 'UTF-8'); ?>
                                     </div>
                                 <?php endif; ?>
-                                <div class="alert alert-light border text-secondary mb-4">
+                                <div class="alert-top alert-light border text-secondary mb-4">
                                     <p class="mb-2">سلام! به صفحه‌ی ثبت‌نام نهایی و پرداخت‌وجه اردوی راه‌ناتمام ۱۴۰۴ خوش آمدید. لطفا به تمامی سوالات، کامل و بادقت پاسخ دهید.</p>
                                     <p class="mb-2">انجام مراحل را تا انتها و پرداخت وجه ادامه دهید.</p>
                                     <p class="mb-0">هرگونه اشتباه و خطا در ثبت اطلاعات برعهده تکمیل‌کننده می‌باشد!</p>
