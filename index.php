@@ -254,7 +254,7 @@ unset($_SESSION['form_error']);
                                                             <label class="form-label">شماره تماس</label>
                                                             <input type="tel" class="form-control group-required" name="group_members[0][mobile]" inputmode="numeric" maxlength="11" pattern="09\d{9}" placeholder="۰۹۱۲۳۴۵۶۷۸۹">
                                                         </div>
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-6" id="academicLevelField">
                                                             <label class="form-label">مقطع تحصیلی</label>
                                                             <select class="form-select group-required" name="group_members[0][academic_level]">
                                                                 <option value="">انتخاب کنید</option>
@@ -263,7 +263,7 @@ unset($_SESSION['form_error']);
                                                                 <option value="phd">دکتری</option>
                                                             </select>
                                                         </div>
-                                                        <div class="col-md-6 group-major-field">
+                                                        <div class="col-md-6 group-major-field" id="academicMajorField">
                                                             <label class="form-label">رشته تحصیلی</label>
                                                             <select class="form-select group-required" name="group_members[0][academic_major]">
                                                                 <option value="">انتخاب کنید</option>
@@ -323,7 +323,7 @@ unset($_SESSION['form_error']);
                                                             <label class="form-label">شماره تماس</label>
                                                             <input type="tel" class="form-control group-required" name="group_members[1][mobile]" inputmode="numeric" maxlength="11" pattern="09\d{9}" placeholder="۰۹۱۲۳۴۵۶۷۸۹">
                                                         </div>
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-6" id="academicLevelField">
                                                             <label class="form-label">مقطع تحصیلی</label>
                                                             <select class="form-select group-required" name="group_members[1][academic_level]">
                                                                 <option value="">انتخاب کنید</option>
@@ -332,7 +332,7 @@ unset($_SESSION['form_error']);
                                                                 <option value="phd">دکتری</option>
                                                             </select>
                                                         </div>
-                                                        <div class="col-md-6 group-major-field">
+                                                        <div class="col-md-6 group-major-field" id="academicMajorField">
                                                             <label class="form-label">رشته تحصیلی</label>
                                                             <select class="form-select group-required" name="group_members[1][academic_major]">
                                                                 <option value="">انتخاب کنید</option>
