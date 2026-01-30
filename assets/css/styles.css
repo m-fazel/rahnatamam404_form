@@ -102,12 +102,35 @@ body::after {
     gap: 1rem;
 }
 
+.hero-aside {
+    display: grid;
+    gap: 1rem;
+}
+
 .info-card {
     background: rgba(0, 62, 95, 0.75);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 1.25rem;
     padding: 1.25rem 1.5rem;
     color: var(--brand-light);
+}
+
+.poster-card {
+    text-align: center;
+}
+
+.poster-card img {
+    width: 100%;
+    max-height: 360px;
+    object-fit: cover;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.poster-caption {
+    font-size: 0.85rem;
+    margin-top: 0.75rem;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .info-card.final-card {
@@ -141,6 +164,11 @@ body::after {
 
 .alert {
     background: rgba(255, 255, 255, 0.85);
+}
+
+.form-alert {
+    border-radius: 0.9rem;
+    border: none;
 }
 
 .form-label,
@@ -254,7 +282,23 @@ body::after {
     color: #ffffff;
 }
 
+.security-code-box {
+    background: #f8fafc;
+    color: #0f172a;
+    border-radius: 0.75rem;
+    border: 1px dashed #cbd5f5;
+    font-weight: 700;
+    font-size: 1.3rem;
+    text-align: center;
+    padding: 0.75rem 1rem;
+    letter-spacing: 0.2rem;
+}
+
 @media (max-width: 576px) {
+    .poster-card img {
+        max-height: 320px;
+    }
+
     .contact-id-list {
         flex-direction: column;
         align-items: flex-start;

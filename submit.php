@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once __DIR__ . '/config.php';
 
 function clean_input($value)
@@ -77,14 +78,14 @@ function is_registered_national_code(PDO $pdo, $code)
         // If the table does not exist yet, fall back to other checks.
     }
 
-    $stmt = $pdo->prepare('SELECT 1 FROM registrations WHERE national_code = :code OR spouse_national_code = :code LIMIT 1');
+    $stmt = $pdo->prepare('SELECT 1 FROM registrations WHERE (national_code = :code OR spouse_national_code = :code) AND payment_status_id = 0 LIMIT 1');
     $stmt->execute([':code' => $code]);
 
     if ($stmt->fetchColumn()) {
         return true;
     }
 
-    $stmt = $pdo->prepare('SELECT 1 FROM group_members WHERE national_code = :code LIMIT 1');
+    $stmt = $pdo->prepare('SELECT 1 FROM group_members INNER JOIN registrations ON registrations.id = group_members.registration_id WHERE group_members.national_code = :code AND registrations.payment_status_id = 0 LIMIT 1');
     $stmt->execute([':code' => $code]);
 
     return (bool) $stmt->fetchColumn();
@@ -121,6 +122,14 @@ function calculate_amount($registrationType, $studentMode, $entryYear, $marriedS
     return ($base * 10000) + $childrenTotal;
 }
 
+function redirect_with_error($message)
+{
+    $_SESSION['form_error'] = $message;
+    $_SESSION['security_code'] = (string) random_int(10000, 99999);
+    header('Location: index.php');
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: index.php');
     exit;
@@ -130,6 +139,16 @@ $registrationType = clean_input($_POST['registration_type'] ?? '');
 $studentMode = $registrationType === 'student' ? clean_input($_POST['student_mode'] ?? '') : '';
 $entryYear = $registrationType === 'student' ? clean_input($_POST['entry_year'] ?? '') : '';
 $marriedStatus = $registrationType === 'married' ? clean_input($_POST['married_status'] ?? '') : '';
+$academicMajor = '';
+$academicLevel = '';
+if ($registrationType === 'student') {
+    $academicMajor = clean_input($_POST['academic_major'] ?? '');
+    $academicLevel = clean_input($_POST['academic_level_student'] ?? '');
+} elseif ($registrationType === 'alumni') {
+    $academicMajor = clean_input($_POST['alumni_major'] ?? '');
+    $academicLevel = clean_input($_POST['academic_level_alumni'] ?? '');
+    $entryYear = sanitize_numeric($_POST['alumni_entry_year'] ?? '');
+}
 
 $firstName = clean_input($_POST['first_name'] ?? '');
 $lastName = clean_input($_POST['last_name'] ?? '');
@@ -137,6 +156,8 @@ $gender = clean_input($_POST['gender'] ?? '');
 $nationalCode = sanitize_numeric($_POST['national_code'] ?? '');
 $birthDate = clean_input($_POST['birth_date'] ?? '');
 $mobile = sanitize_numeric($_POST['mobile'] ?? '');
+$securityCode = sanitize_numeric($_POST['security_code'] ?? '');
+$sessionCode = $_SESSION['security_code'] ?? '';
 
 $spouseName = $registrationType === 'married' ? clean_input($_POST['spouse_name'] ?? '') : '';
 $spouseNationalCode = $registrationType === 'married' ? sanitize_numeric($_POST['spouse_national_code'] ?? '') : '';
@@ -144,34 +165,57 @@ $spouseBirthDate = $registrationType === 'married' ? clean_input($_POST['spouse_
 $childrenCount = $registrationType === 'married' ? clean_input($_POST['children_count'] ?? '') : 0;
 
 if ($registrationType === '') {
-    exit('نوع ثبت نام مشخص نشده است.');
+    redirect_with_error('نوع ثبت نام مشخص نشده است.');
 }
 
 if ($registrationType === 'student') {
     if ($studentMode === '' || $entryYear === '') {
-        exit('لطفا نوع ثبت نام دانشجو و سال ورودی را مشخص کنید.');
+        redirect_with_error('لطفا نوع ثبت نام دانشجو و سال ورودی را مشخص کنید.');
+    }
+    if ($academicMajor === '') {
+        redirect_with_error('لطفا رشته تحصیلی دانشجو را مشخص کنید.');
+    }
+    if ($academicLevel === '') {
+        redirect_with_error('لطفا مقطع تحصیلی دانشجو را مشخص کنید.');
+    }
+}
+
+if ($registrationType === 'alumni') {
+    if ($academicMajor === '') {
+        redirect_with_error('لطفا رشته تحصیلی فارغ التحصیل را مشخص کنید.');
+    }
+    if ($academicLevel === '') {
+        redirect_with_error('لطفا مقطع تحصیلی فارغ التحصیل را مشخص کنید.');
+    }
+    $entryYearInt = (int) $entryYear;
+    if ($entryYear === '' || $entryYearInt < 1345 || $entryYearInt > 1404) {
+        redirect_with_error('سال ورودی فارغ التحصیل باید بین ۱۳۴۵ تا ۱۴۰۴ باشد.');
     }
 }
 
 if ($registrationType === 'married') {
     if ($marriedStatus === '' || $spouseName === '' || $spouseNationalCode === '' || $spouseBirthDate === '') {
-        exit('لطفا اطلاعات همسر و وضعیت تحصیلی را کامل کنید.');
+        redirect_with_error('لطفا اطلاعات همسر و وضعیت تحصیلی را کامل کنید.');
     }
     if (!is_valid_national_code($spouseNationalCode)) {
-        exit('کد ملی همسر معتبر نیست.');
+        redirect_with_error('کد ملی همسر معتبر نیست.');
     }
 }
 
 if ($firstName === '' || $lastName === '' || $gender === '' || $nationalCode === '' || $birthDate === '' || $mobile === '') {
-    exit('لطفا تمام مشخصات فردی را وارد کنید.');
+    redirect_with_error('لطفا تمام مشخصات فردی را وارد کنید.');
 }
 
 if (!is_valid_national_code($nationalCode)) {
-    exit('کد ملی وارد شده معتبر نیست.');
+    redirect_with_error('کد ملی وارد شده معتبر نیست.');
 }
 
 if (!is_valid_mobile($mobile)) {
-    exit('شماره تماس وارد شده معتبر نیست.');
+    redirect_with_error('شماره تماس وارد شده معتبر نیست.');
+}
+
+if ($securityCode === '' || $securityCode !== $sessionCode) {
+    redirect_with_error('کد امنیتی وارد شده صحیح نیست.');
 }
 
 $groupMembers = $_POST['group_members'] ?? [];
@@ -179,7 +223,7 @@ $groupCount = (int) ($_POST['group_count'] ?? 0);
 
 if ($registrationType === 'student' && $studentMode === 'group') {
     if ($groupCount !== 3 || !is_array($groupMembers) || count($groupMembers) !== 2) {
-        exit('ثبت نام گروهی فقط برای ۳ نفر امکان‌پذیر است.');
+        redirect_with_error('ثبت نام گروهی فقط برای ۳ نفر امکان‌پذیر است.');
     }
 
     foreach ($groupMembers as $member) {
@@ -191,15 +235,15 @@ if ($registrationType === 'student' && $studentMode === 'group') {
         $memberMobile = sanitize_numeric($member['mobile'] ?? '');
 
         if ($memberFirst === '' || $memberLast === '' || $memberGender === '' || $memberNational === '' || $memberBirth === '' || $memberMobile === '') {
-            exit('لطفا مشخصات تمام اعضای گروه را کامل کنید.');
+            redirect_with_error('لطفا مشخصات تمام اعضای گروه را کامل کنید.');
         }
 
         if (!is_valid_national_code($memberNational)) {
-            exit('کد ملی اعضای گروه معتبر نیست.');
+            redirect_with_error('کد ملی اعضای گروه معتبر نیست.');
         }
 
         if (!is_valid_mobile($memberMobile)) {
-            exit('شماره تماس اعضای گروه معتبر نیست.');
+            redirect_with_error('شماره تماس اعضای گروه معتبر نیست.');
         }
     }
 }
@@ -226,24 +270,24 @@ if ($registrationType === 'student' && $studentMode === 'group') {
     }
 }
 
-$enableDuplicateCheck = false;
+$enableDuplicateCheck = true;
 $submittedCodes = array_map(static fn ($record) => $record['code'], $submittedCodeRecords);
 
 if ($enableDuplicateCheck) {
     if (count($submittedCodes) !== count(array_unique($submittedCodes))) {
-        exit('کد ملی تکراری در فرم وارد شده است.');
+        redirect_with_error('کد ملی تکراری در فرم وارد شده است.');
     }
 
     foreach ($submittedCodes as $code) {
         if (is_registered_national_code($pdo, $code)) {
-            exit('کد ملی قبلا ثبت شده است و امکان ثبت مجدد وجود ندارد.');
+            redirect_with_error('کد ملی قبلا ثبت شده است و امکان ثبت مجدد وجود ندارد.');
         }
     }
 }
 
 $amount = calculate_amount($registrationType, $studentMode, $entryYear, $marriedStatus, $childrenCount);
 if ($amount <= 0) {
-    exit('مبلغ قابل محاسبه نیست.');
+    redirect_with_error('مبلغ قابل محاسبه نیست.');
 }
 
 $formattedAmount = number_format($amount);
@@ -251,12 +295,14 @@ $formattedAmount = number_format($amount);
 $pdo->beginTransaction();
 
 try {
-    $stmt = $pdo->prepare('INSERT INTO registrations (registration_type, student_mode, entry_year, married_status, amount, formatted_amount, first_name, last_name, gender, national_code, birth_date, mobile, spouse_name, spouse_national_code, spouse_birth_date, children_count, created_at) VALUES (:registration_type, :student_mode, :entry_year, :married_status, :amount, :formatted_amount, :first_name, :last_name, :gender, :national_code, :birth_date, :mobile, :spouse_name, :spouse_national_code, :spouse_birth_date, :children_count, NOW())');
+    $stmt = $pdo->prepare('INSERT INTO registrations (registration_type, student_mode, entry_year, married_status, academic_major, academic_level, amount, formatted_amount, first_name, last_name, gender, national_code, birth_date, mobile, spouse_name, spouse_national_code, spouse_birth_date, children_count, created_at) VALUES (:registration_type, :student_mode, :entry_year, :married_status, :academic_major, :academic_level, :amount, :formatted_amount, :first_name, :last_name, :gender, :national_code, :birth_date, :mobile, :spouse_name, :spouse_national_code, :spouse_birth_date, :children_count, NOW())');
     $stmt->execute([
         ':registration_type' => $registrationType,
         ':student_mode' => $studentMode ?: null,
         ':entry_year' => $entryYear ?: null,
         ':married_status' => $marriedStatus ?: null,
+        ':academic_major' => $academicMajor ?: null,
+        ':academic_level' => $academicLevel ?: null,
         ':amount' => $amount,
         ':formatted_amount' => $formattedAmount,
         ':first_name' => $firstName,
@@ -289,33 +335,16 @@ try {
         }
     }
 
-    if ($enableDuplicateCheck) {
-        try {
-            $codeStmt = $pdo->prepare('INSERT INTO national_codes (code, registration_id, role, created_at) VALUES (:code, :registration_id, :role, NOW())');
-            foreach ($submittedCodeRecords as $record) {
-                $codeStmt->execute([
-                    ':code' => $record['code'],
-                    ':registration_id' => $registrationId,
-                    ':role' => $record['role'],
-                ]);
-            }
-        } catch (PDOException $e) {
-            if (($e->errorInfo[1] ?? null) !== 1146) {
-                throw $e;
-            }
-        }
-    }
-
     $pdo->commit();
 } catch (PDOException $e) {
     $pdo->rollBack();
     if (($e->errorInfo[1] ?? null) === 1062 || $e->getCode() === '23000') {
-        exit('کد ملی قبلا ثبت شده است و امکان ثبت مجدد وجود ندارد.');
+        redirect_with_error('کد ملی قبلا ثبت شده است و امکان ثبت مجدد وجود ندارد.');
     }
-    exit('خطا در ذخیره اطلاعات.');
+    redirect_with_error('خطا در ذخیره اطلاعات.');
 } catch (Exception $e) {
     $pdo->rollBack();
-    exit('خطا در ذخیره اطلاعات.');
+    redirect_with_error('خطا در ذخیره اطلاعات.');
 }
 
 $paymentData = [
@@ -346,12 +375,12 @@ $response = curl_exec($ch);
 curl_close($ch);
 
 if ($response === false) {
-    exit('خطا در ارتباط با درگاه پرداخت.');
+    redirect_with_error('خطا در ارتباط با درگاه پرداخت.');
 }
 
 $result = json_decode($response, true);
 if (!is_array($result) || ($result['Result'] ?? null) !== 0) {
-    exit('ایجاد درگاه پرداخت با خطا مواجه شد.');
+    redirect_with_error('ایجاد درگاه پرداخت با خطا مواجه شد.');
 }
 
 $orderId = (int) $result['OrderID'];
@@ -364,6 +393,7 @@ $updateStmt->execute([
     ':id' => $registrationId,
 ]);
 
+unset($_SESSION['security_code']);
 $redirectUrl = sprintf('https://pay.sharif.edu/submit2/%s/%s', $orderId, $orderGuid);
 header('Location: ' . $redirectUrl);
 exit;

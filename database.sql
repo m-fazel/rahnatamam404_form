@@ -4,6 +4,8 @@ CREATE TABLE `registrations` (
     `student_mode` VARCHAR(20) DEFAULT NULL,
     `entry_year` VARCHAR(20) DEFAULT NULL,
     `married_status` VARCHAR(30) DEFAULT NULL,
+    `academic_major` VARCHAR(50) DEFAULT NULL,
+    `academic_level` VARCHAR(30) DEFAULT NULL,
     `amount` BIGINT NOT NULL,
     `formatted_amount` VARCHAR(30) NOT NULL,
     `first_name` VARCHAR(100) NOT NULL,
@@ -18,8 +20,13 @@ CREATE TABLE `registrations` (
     `children_count` INT DEFAULT NULL,
     `payment_order_id` BIGINT DEFAULT NULL,
     `payment_order_guid` VARCHAR(100) DEFAULT NULL,
+    `payment_reference` VARCHAR(100) DEFAULT NULL,
+    `payment_status_text` VARCHAR(255) DEFAULT NULL,
+    `payment_status_id` INT DEFAULT NULL,
+    `payment_checked_at` DATETIME DEFAULT NULL,
     `created_at` DATETIME NOT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    KEY `idx_payment_status` (`payment_status_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `group_members` (

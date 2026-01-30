@@ -5,6 +5,14 @@ const getRefs = () => ({
     marriedStatusField: document.getElementById('marriedStatusField'),
     groupFields: document.getElementById('groupFields'),
     entryYear: document.getElementById('entry_year'),
+    majorField: document.getElementById('majorField'),
+    academicMajor: document.getElementById('academic_major'),
+    academicLevelStudent: document.getElementById('academic_level_student'),
+    alumniMajorField: document.getElementById('alumniMajorField'),
+    alumniMajor: document.getElementById('alumni_major'),
+    alumniExtraFields: document.getElementById('alumniExtraFields'),
+    alumniEntryYear: document.getElementById('alumni_entry_year'),
+    academicLevelAlumni: document.getElementById('academic_level_alumni'),
     marriedStatus: document.getElementById('married_status'),
     spouseName: document.getElementById('spouse_name'),
     spouseNationalCode: document.getElementById('spouse_national_code'),
@@ -225,6 +233,14 @@ const handleRegistrationType = () => {
         marriedStatusField,
         groupFields,
         entryYear,
+        majorField,
+        academicMajor,
+        academicLevelStudent,
+        alumniMajorField,
+        alumniMajor,
+        alumniExtraFields,
+        alumniEntryYear,
+        academicLevelAlumni,
         marriedStatus,
         spouseName,
         spouseNationalCode,
@@ -240,8 +256,22 @@ const handleRegistrationType = () => {
     studentFields.classList.toggle('d-none', value !== 'student');
     marriedStatusField.classList.toggle('d-none', value !== 'married');
     marriedFields.classList.toggle('d-none', value !== 'married');
+    if (majorField) {
+        majorField.classList.toggle('d-none', value !== 'student');
+    }
+    if (alumniMajorField) {
+        alumniMajorField.classList.toggle('d-none', value !== 'alumni');
+    }
+    if (alumniExtraFields) {
+        alumniExtraFields.classList.toggle('d-none', value !== 'alumni');
+    }
 
     toggleRequired(entryYear, value === 'student');
+    toggleRequired(academicMajor, value === 'student');
+    toggleRequired(academicLevelStudent, value === 'student');
+    toggleRequired(alumniMajor, value === 'alumni');
+    toggleRequired(alumniEntryYear, value === 'alumni');
+    toggleRequired(academicLevelAlumni, value === 'alumni');
     toggleRequired(marriedStatus, value === 'married');
     toggleRequired(spouseName, value === 'married');
     toggleRequired(spouseNationalCode, value === 'married');
@@ -255,7 +285,7 @@ const handleRegistrationType = () => {
         studentModeInputs.forEach((input) => {
             input.checked = false;
         });
-        clearFields([entryYear]);
+        clearFields([entryYear, academicMajor, academicLevelStudent]);
         groupFields.classList.add('d-none');
         groupRequiredFields.forEach((field) => {
             toggleRequired(field, false);
@@ -271,6 +301,10 @@ const handleRegistrationType = () => {
         if (registrationAppInstance) {
             registrationAppInstance.spouseBirthDate = '';
         }
+    }
+
+    if (value !== 'alumni') {
+        clearFields([alumniMajor, alumniEntryYear, academicLevelAlumni]);
     }
 
     updateAmount();
@@ -358,6 +392,12 @@ const initializeForm = () => {
                 event.stopPropagation();
             }
             form.classList.add('was-validated');
+        });
+    }
+
+    if (window.GLightbox) {
+        window.GLightbox({
+            selector: '.glightbox',
         });
     }
 };
