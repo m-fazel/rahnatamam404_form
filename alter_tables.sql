@@ -4,6 +4,10 @@ ALTER TABLE `registrations`
     ADD COLUMN `academic_major` VARCHAR(50) DEFAULT NULL AFTER `married_status`,
     ADD COLUMN `academic_level` VARCHAR(30) DEFAULT NULL AFTER `academic_major`;
 
+ALTER TABLE `group_members`
+    ADD COLUMN `academic_major` VARCHAR(50) DEFAULT NULL AFTER `mobile`,
+    ADD COLUMN `academic_level` VARCHAR(30) DEFAULT NULL AFTER `academic_major`;
+
 ALTER TABLE `registrations`
     ADD COLUMN `payment_reference` VARCHAR(100) DEFAULT NULL AFTER `payment_order_guid`,
     ADD COLUMN `payment_status_text` VARCHAR(255) DEFAULT NULL AFTER `payment_reference`,

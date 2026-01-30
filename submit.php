@@ -148,15 +148,11 @@ $entryYear = $registrationType === 'student' ? clean_input($_POST['entry_year'] 
 $marriedStatus = $registrationType === 'married' ? clean_input($_POST['married_status'] ?? '') : '';
 $academicMajor = '';
 $academicLevel = '';
-if ($registrationType === 'student') {
+if ($registrationType === 'student' || $registrationType === 'alumni') {
     $academicMajor = clean_input($_POST['academic_major'] ?? '');
-    $academicLevel = clean_input($_POST['academic_level_student'] ?? '');
-    if ($academicLevel !== 'bachelor') {
-        $academicMajor = '';
-    }
-} elseif ($registrationType === 'alumni') {
-    $academicMajor = clean_input($_POST['alumni_major'] ?? '');
-    $academicLevel = clean_input($_POST['academic_level_alumni'] ?? '');
+    $academicLevel = clean_input($_POST['academic_level'] ?? '');
+}
+if ($registrationType === 'alumni') {
     $entryYear = sanitize_numeric($_POST['alumni_entry_year'] ?? '');
 }
 
@@ -185,7 +181,7 @@ if ($registrationType === 'student') {
     if ($academicLevel === '') {
         redirect_with_error('لطفا مقطع تحصیلی دانشجو را مشخص کنید.');
     }
-    if ($academicLevel === 'bachelor' && $academicMajor === '') {
+    if ($academicMajor === '') {
         redirect_with_error('لطفا رشته تحصیلی دانشجو را مشخص کنید.');
     }
 }
@@ -243,8 +239,10 @@ if ($registrationType === 'student' && $studentMode === 'group') {
         $memberNational = sanitize_numeric($member['national_code'] ?? '');
         $memberBirth = clean_input($member['birth_date'] ?? '');
         $memberMobile = sanitize_numeric($member['mobile'] ?? '');
+        $memberAcademicLevel = clean_input($member['academic_level'] ?? '');
+        $memberAcademicMajor = clean_input($member['academic_major'] ?? '');
 
-        if ($memberFirst === '' || $memberLast === '' || $memberGender === '' || $memberNational === '' || $memberBirth === '' || $memberMobile === '') {
+        if ($memberFirst === '' || $memberLast === '' || $memberGender === '' || $memberNational === '' || $memberBirth === '' || $memberMobile === '' || $memberAcademicLevel === '' || $memberAcademicMajor === '') {
             redirect_with_error('لطفا مشخصات تمام اعضای گروه را کامل کنید.');
         }
 
@@ -330,7 +328,7 @@ try {
     $registrationId = (int) $pdo->lastInsertId();
 
     if ($registrationType === 'student' && $studentMode === 'group') {
-        $memberStmt = $pdo->prepare('INSERT INTO group_members (registration_id, first_name, last_name, gender, national_code, birth_date, mobile, created_at) VALUES (:registration_id, :first_name, :last_name, :gender, :national_code, :birth_date, :mobile, NOW())');
+        $memberStmt = $pdo->prepare('INSERT INTO group_members (registration_id, first_name, last_name, gender, national_code, birth_date, mobile, academic_level, academic_major, created_at) VALUES (:registration_id, :first_name, :last_name, :gender, :national_code, :birth_date, :mobile, :academic_level, :academic_major, NOW())');
 
         foreach ($groupMembers as $member) {
             $memberStmt->execute([
@@ -341,6 +339,8 @@ try {
                 ':national_code' => sanitize_numeric($member['national_code'] ?? ''),
                 ':birth_date' => clean_input($member['birth_date'] ?? ''),
                 ':mobile' => sanitize_numeric($member['mobile'] ?? ''),
+                ':academic_level' => clean_input($member['academic_level'] ?? ''),
+                ':academic_major' => clean_input($member['academic_major'] ?? ''),
             ]);
         }
     }
