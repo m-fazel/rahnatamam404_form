@@ -144,7 +144,7 @@ unset($_SESSION['form_error']);
                                                     <option value="female">زن</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-6" id="academicLevelField">
                                                 <label for="academic_level" class="form-label">مقطع تحصیلی</label>
                                                 <select class="form-select" id="academic_level" name="academic_level">
                                                     <option value="">انتخاب کنید</option>
