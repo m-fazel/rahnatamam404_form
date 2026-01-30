@@ -181,7 +181,7 @@ unset($_SESSION['form_error']);
                                         <label for="alumni_entry_year" class="form-label fw-semibold">ورودی چه سالی بوده‌اید؟</label>
                                         <input type="number" class="form-control" id="alumni_entry_year" name="alumni_entry_year" min="1345" max="1404" placeholder="مثال: ۱۳۸۸">
                                         <div class="form-text">سال ورودی را بین ۱۳۴۵ تا ۱۴۰۴ وارد کنید.</div>
-                                        <label for="academic_level_alumni" class="form-label fw-semibold mt-3">مقطع تحصیلی</label>
+                                        <label for="academic_level_alumni" class="form-label fw-semibold mt-3">آخرین مقطع تحصیلی</label>
                                         <select class="form-select" id="academic_level_alumni" name="academic_level_alumni">
                                             <option value="">انتخاب کنید</option>
                                             <option value="bachelor">کارشناسی</option>
@@ -254,7 +254,7 @@ unset($_SESSION['form_error']);
                                         <div class="row g-3 align-items-center">
                                             <div class="col-md-4">
                                                 <div class="security-code-box" aria-label="کد امنیتی">
-                                                    <?php echo htmlspecialchars($_SESSION['security_code'], ENT_QUOTES, 'UTF-8'); ?>
+                                                    <img class="security-code-image" src="captcha.php?v=<?php echo time(); ?>" alt="تصویر کد امنیتی">
                                                 </div>
                                             </div>
                                             <div class="col-md-8">
