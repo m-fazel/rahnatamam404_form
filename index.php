@@ -149,42 +149,38 @@ unset($_SESSION['form_error']);
                                                     <option value="female">زن</option>
                                                 </select>
                                             </div>
-                                            <div id="academicFields" class="col-12 d-none">
-                                                <div class="row g-3">
-                                                    <div class="col-md-6">
-                                                        <label for="academic_level" class="form-label">مقطع تحصیلی</label>
-                                                        <select class="form-select" id="academic_level" name="academic_level">
-                                                            <option value="">انتخاب کنید</option>
-                                                            <option value="bachelor">کارشناسی</option>
-                                                            <option value="masters">کارشناسی ارشد</option>
-                                                            <option value="phd">دکتری</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-6" id="academicMajorField">
-                                                        <label for="academic_major" class="form-label">رشته تحصیلی</label>
-                                                        <select class="form-select" id="academic_major" name="academic_major">
-                                                            <option value="">انتخاب کنید</option>
-                                                            <option value="economics">اقتصاد</option>
-                                                            <option value="business_management">مدیریت کسب و کار</option>
-                                                            <option value="science_policy">سیاستگذاری علم و فناوری</option>
-                                                            <option value="philosophy_of_science">فلسفه علم</option>
-                                                            <option value="mechanical">مهندسی مکانیک</option>
-                                                            <option value="computer">مهندسی کامپیوتر</option>
-                                                            <option value="electrical">مهندسی برق</option>
-                                                            <option value="chemical">مهندسی شیمی</option>
-                                                            <option value="civil">مهندسی عمران</option>
-                                                            <option value="energy">مهندسی انرژی</option>
-                                                            <option value="aerospace">مهندسی هوافضا</option>
-                                                            <option value="industrial">مهندسی صنایع</option>
-                                                            <option value="marine">مهندسی دریا</option>
-                                                            <option value="mathematics">ریاضیات و کاربردها</option>
-                                                            <option value="computer_science">علوم کامپیوتر</option>
-                                                            <option value="materials">مهندسی مواد و متالوژی</option>
-                                                            <option value="physics">فیزیک</option>
-                                                            <option value="chemistry">شیمی</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
+                                            <div class="col-md-6">
+                                                <label for="academic_level" class="form-label">مقطع تحصیلی</label>
+                                                <select class="form-select" id="academic_level" name="academic_level">
+                                                    <option value="">انتخاب کنید</option>
+                                                    <option value="bachelor">کارشناسی</option>
+                                                    <option value="masters">کارشناسی ارشد</option>
+                                                    <option value="phd">دکتری</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6" id="academicMajorField">
+                                                <label for="academic_major" class="form-label">رشته تحصیلی</label>
+                                                <select class="form-select" id="academic_major" name="academic_major">
+                                                    <option value="">انتخاب کنید</option>
+                                                    <option value="economics">اقتصاد</option>
+                                                    <option value="business_management">مدیریت کسب و کار</option>
+                                                    <option value="science_policy">سیاستگذاری علم و فناوری</option>
+                                                    <option value="philosophy_of_science">فلسفه علم</option>
+                                                    <option value="mechanical">مهندسی مکانیک</option>
+                                                    <option value="computer">مهندسی کامپیوتر</option>
+                                                    <option value="electrical">مهندسی برق</option>
+                                                    <option value="chemical">مهندسی شیمی</option>
+                                                    <option value="civil">مهندسی عمران</option>
+                                                    <option value="energy">مهندسی انرژی</option>
+                                                    <option value="aerospace">مهندسی هوافضا</option>
+                                                    <option value="industrial">مهندسی صنایع</option>
+                                                    <option value="marine">مهندسی دریا</option>
+                                                    <option value="mathematics">ریاضیات و کاربردها</option>
+                                                    <option value="computer_science">علوم کامپیوتر</option>
+                                                    <option value="materials">مهندسی مواد و متالوژی</option>
+                                                    <option value="physics">فیزیک</option>
+                                                    <option value="chemistry">شیمی</option>
+                                                </select>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">کد ملی</label>
