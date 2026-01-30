@@ -5,14 +5,11 @@ const getRefs = () => ({
     marriedStatusField: document.getElementById('marriedStatusField'),
     groupFields: document.getElementById('groupFields'),
     entryYear: document.getElementById('entry_year'),
-    majorField: document.getElementById('majorField'),
     academicMajor: document.getElementById('academic_major'),
-    academicLevelStudent: document.getElementById('academic_level_student'),
-    alumniMajorField: document.getElementById('alumniMajorField'),
-    alumniMajor: document.getElementById('alumni_major'),
+    academicLevel: document.getElementById('academic_level'),
+    academicFields: document.getElementById('academicFields'),
     alumniExtraFields: document.getElementById('alumniExtraFields'),
     alumniEntryYear: document.getElementById('alumni_entry_year'),
-    academicLevelAlumni: document.getElementById('academic_level_alumni'),
     marriedStatus: document.getElementById('married_status'),
     spouseName: document.getElementById('spouse_name'),
     spouseNationalCode: document.getElementById('spouse_national_code'),
@@ -225,20 +222,6 @@ const updateAmount = () => {
 
 let registrationAppInstance = null;
 
-const updateStudentMajorVisibility = () => {
-    const { registrationType, majorField, academicMajor, academicLevelStudent } = getRefs();
-    if (!majorField || !registrationType) {
-        return;
-    }
-    const isBachelor = academicLevelStudent?.value === 'bachelor';
-    const shouldShow = registrationType.value === 'student' && isBachelor;
-    majorField.classList.toggle('d-none', !shouldShow);
-    toggleRequired(academicMajor, shouldShow);
-    if (!shouldShow) {
-        clearFields([academicMajor]);
-    }
-};
-
 const handleRegistrationType = () => {
     const {
         registrationType,
@@ -247,14 +230,11 @@ const handleRegistrationType = () => {
         marriedStatusField,
         groupFields,
         entryYear,
-        majorField,
         academicMajor,
-        academicLevelStudent,
-        alumniMajorField,
-        alumniMajor,
+        academicLevel,
+        academicFields,
         alumniExtraFields,
         alumniEntryYear,
-        academicLevelAlumni,
         marriedStatus,
         spouseName,
         spouseNationalCode,
@@ -270,18 +250,17 @@ const handleRegistrationType = () => {
     studentFields.classList.toggle('d-none', value !== 'student');
     marriedStatusField.classList.toggle('d-none', value !== 'married');
     marriedFields.classList.toggle('d-none', value !== 'married');
-    if (alumniMajorField) {
-        alumniMajorField.classList.toggle('d-none', value !== 'alumni');
+    if (academicFields) {
+        academicFields.classList.toggle('d-none', value !== 'student' && value !== 'alumni');
     }
     if (alumniExtraFields) {
         alumniExtraFields.classList.toggle('d-none', value !== 'alumni');
     }
 
     toggleRequired(entryYear, value === 'student');
-    toggleRequired(academicLevelStudent, value === 'student');
-    toggleRequired(alumniMajor, value === 'alumni');
+    toggleRequired(academicMajor, value === 'student' || value === 'alumni');
+    toggleRequired(academicLevel, value === 'student' || value === 'alumni');
     toggleRequired(alumniEntryYear, value === 'alumni');
-    toggleRequired(academicLevelAlumni, value === 'alumni');
     toggleRequired(marriedStatus, value === 'married');
     toggleRequired(spouseName, value === 'married');
     toggleRequired(spouseNationalCode, value === 'married');
@@ -295,7 +274,7 @@ const handleRegistrationType = () => {
         studentModeInputs.forEach((input) => {
             input.checked = false;
         });
-        clearFields([entryYear, academicMajor, academicLevelStudent]);
+        clearFields([entryYear]);
         groupFields.classList.add('d-none');
         groupRequiredFields.forEach((field) => {
             toggleRequired(field, false);
@@ -314,10 +293,12 @@ const handleRegistrationType = () => {
     }
 
     if (value !== 'alumni') {
-        clearFields([alumniMajor, alumniEntryYear, academicLevelAlumni]);
+        clearFields([alumniEntryYear]);
     }
 
-    updateStudentMajorVisibility();
+    if (value !== 'student' && value !== 'alumni') {
+        clearFields([academicMajor, academicLevel]);
+    }
     updateAmount();
 };
 
@@ -357,9 +338,6 @@ document.addEventListener('change', (event) => {
     }
     if (target.id === 'entry_year' || target.id === 'married_status') {
         updateAmount();
-    }
-    if (target.id === 'academic_level_student') {
-        updateStudentMajorVisibility();
     }
 });
 document.addEventListener('input', (event) => {

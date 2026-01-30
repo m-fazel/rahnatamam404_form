@@ -38,6 +38,8 @@ CREATE TABLE `group_members` (
     `national_code` VARCHAR(20) NOT NULL,
     `birth_date` DATE NOT NULL,
     `mobile` VARCHAR(30) NOT NULL,
+    `academic_major` VARCHAR(50) DEFAULT NULL,
+    `academic_level` VARCHAR(30) DEFAULT NULL,
     `created_at` DATETIME NOT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_registration_id` (`registration_id`),
