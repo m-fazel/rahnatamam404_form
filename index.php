@@ -1,4 +1,12 @@
 <?php
+session_start();
+
+if (empty($_SESSION['security_code'])) {
+    $_SESSION['security_code'] = (string) random_int(10000, 99999);
+}
+
+$formError = $_SESSION['form_error'] ?? '';
+unset($_SESSION['form_error']);
 ?>
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
@@ -7,6 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ثبت نام نهایی اردوی راه‌ناتمام ۱۴۰۴</title>
     <link href="assets/bootstrap/bootstrap.rtl.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet">
     <link href="assets/css/styles.css" rel="stylesheet">
 </head>
 <body>
@@ -14,12 +23,18 @@
         <header class="hero-section">
             <div class="container">
                 <div class="hero-content">
-                    <div>
+                    <div class="hero-intro">
                         <span class="hero-badge">ثبت نام نهایی</span>
                         <h1 class="hero-title">اردوی راه‌ناتمام ۱۴۰۴</h1>
                         <p class="hero-subtitle">اطلاعات را با دقت تکمیل کنید تا مبلغ نهایی و پرداخت در همان لحظه برایتان نمایش داده شود.</p>
                     </div>
-                    <div class="hero-info">
+                    <div class="hero-aside">
+                        <div class="info-card poster-card">
+                            <a href="assets/images/poster.jpg" class="glightbox" data-gallery="poster">
+                                <img src="assets/images/poster.jpg" alt="پوستر اردوی راه‌ناتمام ۱۴۰۴">
+                            </a>
+                            <p class="poster-caption">برای مشاهده پوستر در اندازه بزرگ‌تر، روی تصویر کلیک کنید.</p>
+                        </div>
                         <div class="info-card final-card">
                             <h2 class="h6 mb-2">مبلغ نهایی شما</h2>
                             <p class="final-amount" id="finalAmount">—</p>
@@ -36,6 +51,11 @@
                     <div class="col-lg-10">
                         <div class="card shadow-lg border-0">
                             <div class="card-body p-4 p-md-5">
+                                <?php if ($formError !== ''): ?>
+                                    <div class="alert alert-danger form-alert mb-4" role="alert">
+                                        <?php echo htmlspecialchars($formError, ENT_QUOTES, 'UTF-8'); ?>
+                                    </div>
+                                <?php endif; ?>
                                 <div class="alert alert-light border text-secondary mb-4">
                                     <p class="mb-2">سلام! به صفحه‌ی ثبت‌نام نهایی و پرداخت‌وجه اردوی راه‌ناتمام ۱۴۰۴ خوش آمدید. لطفا به تمامی سوالات، کامل و بادقت پاسخ دهید.</p>
                                     <p class="mb-2">انجام مراحل را تا انتها و پرداخت وجه ادامه دهید.</p>
@@ -107,6 +127,67 @@
                                                 <option value="1402_or_before">ورودی ۱۴۰۲ و ماقبل</option>
                                             </select>
                                         </div>
+                                        <div id="majorField" class="mb-3">
+                                            <label for="academic_major" class="form-label fw-semibold">رشته تحصیلی</label>
+                                            <select class="form-select" id="academic_major" name="academic_major">
+                                                <option value="">انتخاب کنید</option>
+                                                <option value="mechanical">مهندسی مکانیک</option>
+                                                <option value="computer">مهندسی کامپیوتر</option>
+                                                <option value="electrical">مهندسی برق</option>
+                                                <option value="chemical">مهندسی شیمی</option>
+                                                <option value="civil">مهندسی عمران</option>
+                                                <option value="energy">مهندسی انرژی</option>
+                                                <option value="aerospace">مهندسی هوافضا</option>
+                                                <option value="industrial">مهندسی صنایع</option>
+                                                <option value="marine">مهندسی دریا</option>
+                                                <option value="mathematics">ریاضیات و کاربردها</option>
+                                                <option value="computer_science">علوم کامپیوتر</option>
+                                                <option value="materials">مهندسی مواد و متالوژی</option>
+                                                <option value="physics">فیزیک</option>
+                                                <option value="chemistry">شیمی</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="academic_level_student" class="form-label fw-semibold">مقطع تحصیلی</label>
+                                            <select class="form-select" id="academic_level_student" name="academic_level_student">
+                                                <option value="">انتخاب کنید</option>
+                                                <option value="bachelor">کارشناسی</option>
+                                                <option value="masters">کارشناسی ارشد</option>
+                                                <option value="phd">دکتری</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div id="alumniMajorField" class="d-none mb-3">
+                                        <label for="alumni_major" class="form-label fw-semibold">رشته تحصیلی</label>
+                                        <select class="form-select" id="alumni_major" name="alumni_major">
+                                            <option value="">انتخاب کنید</option>
+                                            <option value="mechanical">مهندسی مکانیک</option>
+                                            <option value="computer">مهندسی کامپیوتر</option>
+                                            <option value="electrical">مهندسی برق</option>
+                                            <option value="chemical">مهندسی شیمی</option>
+                                            <option value="civil">مهندسی عمران</option>
+                                            <option value="energy">مهندسی انرژی</option>
+                                            <option value="aerospace">مهندسی هوافضا</option>
+                                            <option value="industrial">مهندسی صنایع</option>
+                                            <option value="marine">مهندسی دریا</option>
+                                            <option value="mathematics">ریاضیات و کاربردها</option>
+                                            <option value="computer_science">علوم کامپیوتر</option>
+                                            <option value="materials">مهندسی مواد و متالوژی</option>
+                                            <option value="physics">فیزیک</option>
+                                            <option value="chemistry">شیمی</option>
+                                        </select>
+                                    </div>
+                                    <div id="alumniExtraFields" class="d-none mb-3">
+                                        <label for="alumni_entry_year" class="form-label fw-semibold">ورودی چه سالی بوده‌اید؟</label>
+                                        <input type="number" class="form-control" id="alumni_entry_year" name="alumni_entry_year" min="1345" max="1404" placeholder="مثال: ۱۳۸۸">
+                                        <div class="form-text">سال ورودی را بین ۱۳۴۵ تا ۱۴۰۴ وارد کنید.</div>
+                                        <label for="academic_level_alumni" class="form-label fw-semibold mt-3">مقطع تحصیلی</label>
+                                        <select class="form-select" id="academic_level_alumni" name="academic_level_alumni">
+                                            <option value="">انتخاب کنید</option>
+                                            <option value="bachelor">کارشناسی</option>
+                                            <option value="masters">کارشناسی ارشد</option>
+                                            <option value="phd">دکتری</option>
+                                        </select>
                                     </div>
 
                                     <div class="mt-4">
@@ -164,6 +245,21 @@
                                                 <label class="form-label">تعداد فرزندان (درصورت وجود)</label>
                                                 <input type="number" class="form-control" name="children_count" id="children_count" min="0" value="0" placeholder="مثال: ۰">
                                                 <div class="form-text">جهت ثبت‌نام نهایی و حضور فرزندان در اردو، حتما جهت ثبت اطلاعات فرزندان با اکانت پشتیبانی در ارتباط باشید.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <h2 class="h5 fw-bold">کد امنیتی</h2>
+                                        <div class="row g-3 align-items-center">
+                                            <div class="col-md-4">
+                                                <div class="security-code-box" aria-label="کد امنیتی">
+                                                    <?php echo htmlspecialchars($_SESSION['security_code'], ENT_QUOTES, 'UTF-8'); ?>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <label class="form-label">کد امنیتی را وارد کنید</label>
+                                                <input type="text" class="form-control" name="security_code" inputmode="numeric" maxlength="5" pattern="\d{5}" placeholder="مثال: ۱۲۳۴۵" required>
                                             </div>
                                         </div>
                                     </div>
@@ -265,6 +361,7 @@
     <script src="assets/js/moment-jalaali.js"></script>
     <script src="assets/js/vue3-persian-datetime-picker.umd.min.js"></script>
     <script src="assets/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
     <script src="assets/js/form.js"></script>
 </body>
 </html>
