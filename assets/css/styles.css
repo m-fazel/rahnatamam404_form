@@ -63,7 +63,7 @@ body::after {
 .hero-content {
     display: grid;
     gap: 2rem;
-    align-items: end;
+    align-items: center;
 }
 
 @media (min-width: 992px) {
