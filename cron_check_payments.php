@@ -49,7 +49,7 @@ function store_successful_codes(PDO $pdo, $registrationId)
 
 $pdo = get_pdo($DB_HOST, $DB_NAME, $DB_USER, $DB_PASS);
 
-$stmt = $pdo->prepare('SELECT id, payment_order_id, payment_order_guid FROM registrations WHERE payment_order_id IS NOT NULL AND (payment_checked_at IS NULL OR payment_checked_at - created_at > INTERVAL 1 HOUR)');
+$stmt = $pdo->prepare('SELECT id, payment_order_id, payment_order_guid FROM registrations WHERE payment_order_id IS NOT NULL AND (payment_checked_at IS NULL OR payment_checked_at < created_at + INTERVAL 1 HOUR)');
 $stmt->execute();
 
 $registrations = $stmt->fetchAll();
