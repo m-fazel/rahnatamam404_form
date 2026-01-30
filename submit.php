@@ -187,11 +187,11 @@ if ($registrationType === 'student') {
 }
 
 if ($registrationType === 'alumni') {
-    if ($academicMajor === '') {
-        redirect_with_error('لطفا رشته تحصیلی فارغ التحصیل را مشخص کنید.');
-    }
     if ($academicLevel === '') {
         redirect_with_error('لطفا مقطع تحصیلی فارغ التحصیل را مشخص کنید.');
+    }
+    if ($academicMajor === '') {
+        redirect_with_error('لطفا رشته تحصیلی فارغ التحصیل را مشخص کنید.');
     }
     $entryYearInt = (int) $entryYear;
     if ($entryYear === '' || $entryYearInt < 1345 || $entryYearInt > 1404) {
@@ -242,8 +242,11 @@ if ($registrationType === 'student' && $studentMode === 'group') {
         $memberAcademicLevel = clean_input($member['academic_level'] ?? '');
         $memberAcademicMajor = clean_input($member['academic_major'] ?? '');
 
-        if ($memberFirst === '' || $memberLast === '' || $memberGender === '' || $memberNational === '' || $memberBirth === '' || $memberMobile === '' || $memberAcademicLevel === '' || $memberAcademicMajor === '') {
+        if ($memberFirst === '' || $memberLast === '' || $memberGender === '' || $memberNational === '' || $memberBirth === '' || $memberMobile === '' || $memberAcademicLevel === '') {
             redirect_with_error('لطفا مشخصات تمام اعضای گروه را کامل کنید.');
+        }
+        if ($memberAcademicMajor === '') {
+            redirect_with_error('لطفا رشته تحصیلی اعضای گروه را مشخص کنید.');
         }
 
         if (!is_valid_national_code($memberNational)) {

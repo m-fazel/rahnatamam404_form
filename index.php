@@ -155,16 +155,19 @@ unset($_SESSION['form_error']);
                                                         <label for="academic_level" class="form-label">مقطع تحصیلی</label>
                                                         <select class="form-select" id="academic_level" name="academic_level">
                                                             <option value="">انتخاب کنید</option>
-                                                            <option value="diploma">دیپلم</option>
                                                             <option value="bachelor">کارشناسی</option>
                                                             <option value="masters">کارشناسی ارشد</option>
                                                             <option value="phd">دکتری</option>
                                                         </select>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-6" id="academicMajorField">
                                                         <label for="academic_major" class="form-label">رشته تحصیلی</label>
                                                         <select class="form-select" id="academic_major" name="academic_major">
                                                             <option value="">انتخاب کنید</option>
+                                                            <option value="economics">اقتصاد</option>
+                                                            <option value="business_management">مدیریت کسب و کار</option>
+                                                            <option value="science_policy">سیاستگذاری علم و فناوری</option>
+                                                            <option value="philosophy_of_science">فلسفه علم</option>
                                                             <option value="mechanical">مهندسی مکانیک</option>
                                                             <option value="computer">مهندسی کامپیوتر</option>
                                                             <option value="electrical">مهندسی برق</option>
@@ -279,16 +282,19 @@ unset($_SESSION['form_error']);
                                                             <label class="form-label">مقطع تحصیلی</label>
                                                             <select class="form-select group-required" name="group_members[0][academic_level]">
                                                                 <option value="">انتخاب کنید</option>
-                                                                <option value="diploma">دیپلم</option>
                                                                 <option value="bachelor">کارشناسی</option>
                                                                 <option value="masters">کارشناسی ارشد</option>
                                                                 <option value="phd">دکتری</option>
                                                             </select>
                                                         </div>
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-6 group-major-field">
                                                             <label class="form-label">رشته تحصیلی</label>
                                                             <select class="form-select group-required" name="group_members[0][academic_major]">
                                                                 <option value="">انتخاب کنید</option>
+                                                                <option value="economics">اقتصاد</option>
+                                                                <option value="business_management">مدیریت کسب و کار</option>
+                                                                <option value="science_policy">سیاستگذاری علم و فناوری</option>
+                                                                <option value="philosophy_of_science">فلسفه علم</option>
                                                                 <option value="mechanical">مهندسی مکانیک</option>
                                                                 <option value="computer">مهندسی کامپیوتر</option>
                                                                 <option value="electrical">مهندسی برق</option>
@@ -345,16 +351,19 @@ unset($_SESSION['form_error']);
                                                             <label class="form-label">مقطع تحصیلی</label>
                                                             <select class="form-select group-required" name="group_members[1][academic_level]">
                                                                 <option value="">انتخاب کنید</option>
-                                                                <option value="diploma">دیپلم</option>
                                                                 <option value="bachelor">کارشناسی</option>
                                                                 <option value="masters">کارشناسی ارشد</option>
                                                                 <option value="phd">دکتری</option>
                                                             </select>
                                                         </div>
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-6 group-major-field">
                                                             <label class="form-label">رشته تحصیلی</label>
                                                             <select class="form-select group-required" name="group_members[1][academic_major]">
                                                                 <option value="">انتخاب کنید</option>
+                                                                <option value="economics">اقتصاد</option>
+                                                                <option value="business_management">مدیریت کسب و کار</option>
+                                                                <option value="science_policy">سیاستگذاری علم و فناوری</option>
+                                                                <option value="philosophy_of_science">فلسفه علم</option>
                                                                 <option value="mechanical">مهندسی مکانیک</option>
                                                                 <option value="computer">مهندسی کامپیوتر</option>
                                                                 <option value="electrical">مهندسی برق</option>
