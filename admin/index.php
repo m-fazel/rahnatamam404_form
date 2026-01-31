@@ -75,30 +75,31 @@ if (!$loggedIn) {
 
 $pdo = get_pdo($DB_HOST, $DB_NAME, $DB_USER, $DB_PASS);
 
-$registrationType = $_GET['registration_type'] ?? 'all';
-$gender = $_GET['gender'] ?? 'all';
+$filter = $_GET['filter'] ?? 'married';
 
 $where = ['payment_status_id = 0'];
 $params = [];
 
-$allowedTypes = ['all', 'married', 'student', 'alumni', 'other'];
-if (!in_array($registrationType, $allowedTypes, true)) {
-    $registrationType = 'all';
+$allowedFilters = ['married', 'male', 'female'];
+if (!in_array($filter, $allowedFilters, true)) {
+    $filter = 'married';
 }
 
-$allowedGenders = ['all', 'male', 'female'];
-if (!in_array($gender, $allowedGenders, true)) {
-    $gender = 'all';
-}
-
-if ($registrationType !== 'all') {
+if ($filter === 'married') {
     $where[] = 'registration_type = :registration_type';
-    $params[':registration_type'] = $registrationType;
+    $params[':registration_type'] = 'married';
 }
 
-if ($gender !== 'all') {
+if ($filter === 'male') {
+    $where[] = "registration_type IN ('student', 'alumni', 'other')";
     $where[] = 'gender = :gender';
-    $params[':gender'] = $gender;
+    $params[':gender'] = 'male';
+}
+
+if ($filter === 'female') {
+    $where[] = "registration_type IN ('student', 'alumni', 'other')";
+    $where[] = 'gender = :gender';
+    $params[':gender'] = 'female';
 }
 
 $whereSql = implode(' AND ', $where);
@@ -143,8 +144,7 @@ $marriedStatusLabels = [
 ];
 
 $exportQuery = http_build_query([
-    'registration_type' => $registrationType,
-    'gender' => $gender,
+    'filter' => $filter,
 ]);
 ?>
 <!DOCTYPE html>
@@ -194,22 +194,12 @@ $exportQuery = http_build_query([
                 <div class="card shadow-sm mb-4">
                     <div class="card-body">
                         <form class="row g-3 align-items-end" method="get" action="index.php">
-                            <div class="col-md-4">
-                                <label class="form-label">نوع ثبت نام</label>
-                                <select class="form-select" name="registration_type">
-                                    <option value="all" <?php echo $registrationType === 'all' ? 'selected' : ''; ?>>همه</option>
-                                    <option value="married" <?php echo $registrationType === 'married' ? 'selected' : ''; ?>>متاهل</option>
-                                    <option value="student" <?php echo $registrationType === 'student' ? 'selected' : ''; ?>>دانشجو</option>
-                                    <option value="alumni" <?php echo $registrationType === 'alumni' ? 'selected' : ''; ?>>فارغ التحصیل</option>
-                                    <option value="other" <?php echo $registrationType === 'other' ? 'selected' : ''; ?>>سایر</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">جنسیت</label>
-                                <select class="form-select" name="gender">
-                                    <option value="all" <?php echo $gender === 'all' ? 'selected' : ''; ?>>همه</option>
-                                    <option value="male" <?php echo $gender === 'male' ? 'selected' : ''; ?>>مرد</option>
-                                    <option value="female" <?php echo $gender === 'female' ? 'selected' : ''; ?>>زن</option>
+                            <div class="col-md-8">
+                                <label class="form-label">نوع فیلتر</label>
+                                <select class="form-select" name="filter">
+                                    <option value="married" <?php echo $filter === 'married' ? 'selected' : ''; ?>>متاهلین</option>
+                                    <option value="male" <?php echo $filter === 'male' ? 'selected' : ''; ?>>دانشجو/فارغ التحصیل/سایر مرد</option>
+                                    <option value="female" <?php echo $filter === 'female' ? 'selected' : ''; ?>>دانشجو/فارغ التحصیل/سایر زن</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
