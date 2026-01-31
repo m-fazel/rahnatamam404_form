@@ -4,6 +4,8 @@ session_start();
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/lib/SimpleXLSXGen.php';
 
+use Shuchkin\SimpleXLSXGen;
+
 $loggedIn = isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true;
 if (!$loggedIn) {
     header('Location: index.php');
