@@ -2,6 +2,7 @@
 session_start();
 
 require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/lib/SimpleXLSXGen.php';
 
 $loggedIn = isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true;
 if (!$loggedIn) {
@@ -56,35 +57,30 @@ if ($registrationIds) {
     }
 }
 
-header('Content-Type: application/vnd.ms-excel; charset=utf-8');
-header('Content-Disposition: attachment; filename="registrations.xls"');
-
-echo '<html lang="fa" dir="rtl"><head><meta charset="UTF-8"></head><body>';
-echo '<table border="1">';
-echo '<thead><tr>';
-echo '<th>شناسه</th>';
-echo '<th>نوع ثبت نام</th>';
-echo '<th>حالت دانشجو</th>';
-echo '<th>سال ورودی</th>';
-echo '<th>وضعیت متاهل</th>';
-echo '<th>نام</th>';
-echo '<th>نام خانوادگی</th>';
-echo '<th>جنسیت</th>';
-echo '<th>کد ملی</th>';
-echo '<th>تاریخ تولد</th>';
-echo '<th>موبایل</th>';
-echo '<th>مقطع</th>';
-echo '<th>رشته</th>';
-echo '<th>نام همسر</th>';
-echo '<th>کد ملی همسر</th>';
-echo '<th>تاریخ تولد همسر</th>';
-echo '<th>تعداد فرزندان</th>';
-echo '<th>اعضای گروه</th>';
-echo '<th>مبلغ</th>';
-echo '<th>کد پیگیری</th>';
-echo '<th>وضعیت پرداخت</th>';
-echo '<th>زمان ثبت</th>';
-echo '</tr></thead><tbody>';
+$rows = [[
+    'شناسه',
+    'نوع ثبت نام',
+    'حالت دانشجو',
+    'سال ورودی',
+    'وضعیت متاهل',
+    'نام',
+    'نام خانوادگی',
+    'جنسیت',
+    'کد ملی',
+    'تاریخ تولد',
+    'موبایل',
+    'مقطع',
+    'رشته',
+    'نام همسر',
+    'کد ملی همسر',
+    'تاریخ تولد همسر',
+    'تعداد فرزندان',
+    'اعضای گروه',
+    'مبلغ',
+    'کد پیگیری',
+    'وضعیت پرداخت',
+    'زمان ثبت',
+]];
 
 foreach ($registrations as $registration) {
     $members = $groupMembersByRegistration[$registration['id']] ?? [];
@@ -99,30 +95,32 @@ foreach ($registrations as $registration) {
         );
     }
 
-    echo '<tr>';
-    echo '<td>' . htmlspecialchars((string) $registration['id'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['registration_type'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['student_mode'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['entry_year'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['married_status'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['first_name'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['last_name'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['gender'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['national_code'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['birth_date'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['mobile'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['academic_level'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['academic_major'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['spouse_name'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['spouse_national_code'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['spouse_birth_date'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars((string) $registration['children_count'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars(implode(' | ', $memberChunks), ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['formatted_amount'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['payment_reference'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['payment_status_text'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '<td>' . htmlspecialchars($registration['created_at'], ENT_QUOTES, 'UTF-8') . '</td>';
-    echo '</tr>';
+    $rows[] = [
+        (string) $registration['id'],
+        $registration['registration_type'],
+        $registration['student_mode'],
+        $registration['entry_year'],
+        $registration['married_status'],
+        $registration['first_name'],
+        $registration['last_name'],
+        $registration['gender'],
+        $registration['national_code'],
+        $registration['birth_date'],
+        $registration['mobile'],
+        $registration['academic_level'],
+        $registration['academic_major'],
+        $registration['spouse_name'],
+        $registration['spouse_national_code'],
+        $registration['spouse_birth_date'],
+        (string) $registration['children_count'],
+        implode(' | ', $memberChunks),
+        $registration['formatted_amount'],
+        $registration['payment_reference'],
+        $registration['payment_status_text'],
+        $registration['created_at'],
+    ];
 }
 
-echo '</tbody></table></body></html>';
+SimpleXLSXGen::fromArray($rows, 'Registrations')
+    ->downloadAs('registrations.xlsx');
+exit;
