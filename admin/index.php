@@ -37,7 +37,7 @@ if (!$loggedIn) {
     <body>
         <main class="page-wrapper">
             <section class="form-section">
-                <div class="container">
+                <div class="container pt-4">
                     <div class="row justify-content-center">
                         <div class="col-lg-6">
                             <div class="card shadow-lg border-0">
@@ -179,14 +179,14 @@ $exportQuery = http_build_query([
 <body>
     <main class="page-wrapper">
         <section class="form-section">
-            <div class="container">
+            <div class="container pt-4">
                 <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
                     <div>
                         <h1 class="h4 fw-bold mb-1">ثبت نام های پرداخت شده</h1>
-                        <p class="text-muted mb-0">فقط ثبت نام هایی که پرداخت موفق دارند نمایش داده می شود.</p>
+                        <p class="text-light mb-0">فقط ثبت نام هایی که پرداخت موفق دارند نمایش داده می شود.</p>
                     </div>
                     <div class="d-flex gap-2">
-                        <a class="btn btn-outline-primary" href="export.php?<?php echo htmlspecialchars($exportQuery, ENT_QUOTES, 'UTF-8'); ?>">خروجی اکسل</a>
+                        <a class="btn btn-success" href="export.php?<?php echo htmlspecialchars($exportQuery, ENT_QUOTES, 'UTF-8'); ?>">خروجی اکسل</a>
                         <a class="btn btn-outline-secondary" href="logout.php">خروج</a>
                     </div>
                 </div>
