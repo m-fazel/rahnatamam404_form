@@ -75,6 +75,20 @@ if (!$loggedIn) {
 
 $pdo = get_pdo($DB_HOST, $DB_NAME, $DB_USER, $DB_PASS);
 
+$countStmt = $pdo->query(
+    "SELECT
+        SUM(CASE WHEN registration_type = 'married' THEN 1 ELSE 0 END) AS married_count,
+        SUM(CASE WHEN registration_type IN ('student', 'alumni', 'other') AND gender = 'male' THEN 1 ELSE 0 END) AS male_count,
+        SUM(CASE WHEN registration_type IN ('student', 'alumni', 'other') AND gender = 'female' THEN 1 ELSE 0 END) AS female_count
+     FROM registrations
+     WHERE payment_status_id = 0"
+);
+$categoryCounts = $countStmt->fetch() ?: [
+    'married_count' => 0,
+    'male_count' => 0,
+    'female_count' => 0,
+];
+
 $filter = $_GET['filter'] ?? 'married';
 
 $where = ['payment_status_id = 0'];
@@ -209,11 +223,38 @@ $exportQuery = http_build_query([
                     </div>
                 </div>
 
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <div class="text-muted small">تعداد متاهلین</div>
+                                <div class="h5 fw-bold mb-0"><?php echo (int) $categoryCounts['married_count']; ?></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <div class="text-muted small">تعداد دانشجو/فارغ التحصیل/سایر مرد</div>
+                                <div class="h5 fw-bold mb-0"><?php echo (int) $categoryCounts['male_count']; ?></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <div class="text-muted small">تعداد دانشجو/فارغ التحصیل/سایر زن</div>
+                                <div class="h5 fw-bold mb-0"><?php echo (int) $categoryCounts['female_count']; ?></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped admin-table">
                         <thead class="table-light">
                             <tr>
-                                <th>شناسه</th>
+                                <th>ردیف</th>
                                 <th>نوع ثبت نام</th>
                                 <th>مشخصات اصلی</th>
                                 <th>اطلاعات تحصیلی</th>
@@ -229,9 +270,9 @@ $exportQuery = http_build_query([
                                     <td colspan="8" class="text-center text-muted">موردی یافت نشد.</td>
                                 </tr>
                             <?php else: ?>
-                                <?php foreach ($registrations as $registration): ?>
+                                <?php foreach ($registrations as $index => $registration): ?>
                                     <tr>
-                                        <td><?php echo (int) $registration['id']; ?></td>
+                                        <td><?php echo (int) ($index + 1); ?></td>
                                         <td>
                                             <span class="badge bg-primary badge-filter">
                                                 <?php echo htmlspecialchars($registrationLabels[$registration['registration_type']] ?? $registration['registration_type'], ENT_QUOTES, 'UTF-8'); ?>
