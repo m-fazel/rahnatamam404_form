@@ -60,7 +60,7 @@ if ($registrationIds) {
 }
 
 $rows = [[
-    'شناسه',
+    'ردیف',
     'نوع ثبت نام',
     'حالت دانشجو',
     'سال ورودی',
@@ -84,6 +84,7 @@ $rows = [[
     'زمان ثبت',
 ]];
 
+$rowNumber = 1;
 foreach ($registrations as $registration) {
     $members = $groupMembersByRegistration[$registration['id']] ?? [];
     $memberChunks = [];
@@ -98,7 +99,7 @@ foreach ($registrations as $registration) {
     }
 
     $rows[] = [
-        (string) $registration['id'],
+        (string) $rowNumber,
         $registration['registration_type'],
         $registration['student_mode'],
         $registration['entry_year'],
@@ -121,6 +122,7 @@ foreach ($registrations as $registration) {
         $registration['payment_status_text'],
         $registration['created_at'],
     ];
+    $rowNumber++;
 }
 
 SimpleXLSXGen::fromArray($rows, 'Registrations')
