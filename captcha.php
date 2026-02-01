@@ -9,7 +9,7 @@ function generate_captcha_code(int $length, int $type = 1): string
 {
     $letters = $type === 2
         ? '123456789'
-        : '123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        : '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ';
     $maxIndex = strlen($letters) - 1;
     $captcha = '';
 
