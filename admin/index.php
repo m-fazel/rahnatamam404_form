@@ -77,11 +77,37 @@ $pdo = get_pdo($DB_HOST, $DB_NAME, $DB_USER, $DB_PASS);
 
 $countStmt = $pdo->query(
     "SELECT
-        SUM(CASE WHEN registration_type = 'married' THEN 1 ELSE 0 END) AS married_count,
-        SUM(CASE WHEN registration_type IN ('student', 'alumni', 'other') AND gender = 'male' THEN 1 ELSE 0 END) AS male_count,
-        SUM(CASE WHEN registration_type IN ('student', 'alumni', 'other') AND gender = 'female' THEN 1 ELSE 0 END) AS female_count
-     FROM registrations
-     WHERE payment_status_id = 0"
+        (SELECT COUNT(*) * 2
+         FROM registrations
+         WHERE registration_type = 'married' AND payment_status_id = 0) AS married_count,
+        (
+            SELECT COUNT(*)
+            FROM registrations
+            WHERE registration_type IN ('student', 'alumni', 'other')
+              AND gender = 'male'
+              AND payment_status_id = 0
+        ) + (
+            SELECT COUNT(*)
+            FROM group_members gm
+            INNER JOIN registrations r ON r.id = gm.registration_id
+            WHERE r.registration_type IN ('student', 'alumni', 'other')
+              AND r.payment_status_id = 0
+              AND gm.gender = 'male'
+        ) AS male_count,
+        (
+            SELECT COUNT(*)
+            FROM registrations
+            WHERE registration_type IN ('student', 'alumni', 'other')
+              AND gender = 'female'
+              AND payment_status_id = 0
+        ) + (
+            SELECT COUNT(*)
+            FROM group_members gm
+            INNER JOIN registrations r ON r.id = gm.registration_id
+            WHERE r.registration_type IN ('student', 'alumni', 'other')
+              AND r.payment_status_id = 0
+              AND gm.gender = 'female'
+        ) AS female_count"
 );
 $categoryCounts = $countStmt->fetch() ?: [
     'married_count' => 0,
