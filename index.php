@@ -379,7 +379,11 @@ unset($_SESSION['form_error']);
 
                                     <div class="mt-4">
                                         <label for="discount_code" class="form-label fw-semibold">کد تخفیف</label>
-                                        <input type="text" class="form-control" id="discount_code" name="discount_code" placeholder="در صورت داشتن کد تخفیف وارد کنید">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="discount_code" name="discount_code" placeholder="در صورت داشتن کد تخفیف وارد کنید">
+                                            <button type="button" class="btn btn-outline-secondary" id="discountCheckButton">بررسی کد</button>
+                                        </div>
+                                        <div class="form-text mt-2" id="discountFeedback" aria-live="polite"></div>
                                     </div>
 
                                     <div class="mt-4">
