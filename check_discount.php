@@ -42,7 +42,7 @@ function fetch_discount_code(PDO $pdo, $code)
         return null;
     }
 
-    $stmt = $pdo->prepare('SELECT id FROM discount_codes WHERE code = :code AND is_active = 1 LIMIT 1');
+    $stmt = $pdo->prepare('SELECT id, title, discount_type, discount_value FROM discount_codes WHERE code = :code AND is_active = 1 LIMIT 1');
     $stmt->execute([':code' => $code]);
     $discount = $stmt->fetch();
     if (!$discount) {
@@ -98,4 +98,10 @@ if (!$discount) {
 echo json_encode([
     'valid' => true,
     'message' => 'کد تخفیف معتبر است.',
+    'discount' => [
+        'id' => (int) $discount['id'],
+        'title' => $discount['title'],
+        'type' => $discount['discount_type'],
+        'value' => (int) $discount['discount_value'],
+    ],
 ]);
