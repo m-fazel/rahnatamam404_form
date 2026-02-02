@@ -200,22 +200,20 @@ const updateAmount = () => {
         return;
     }
 
-    const base = calculateBaseAmount();
-    if (!base) {
+    const amount = getCurrentAmount();
+    if (!amount) {
         finalAmount.textContent = '—';
         amountDetails.textContent = 'برای مشاهده مبلغ، نوع ثبت نام و گزینه‌های لازم را انتخاب کنید.';
         return;
     }
 
     const children = registrationType.value === 'married' ? Math.max(parseInt(childrenCount?.value || 0, 10), 0) : 0;
-    let amount = base * 1000;
-
     const paymentType = getSelectedPaymentType();
-    if ((registrationType.value === 'student' || registrationType.value === 'alumni') && paymentType === 'installment') {
-        amount = Math.round(amount / 2);
-    }
+    const discountedAmount = discountState.isValid
+        ? applyDiscountToAmount(amount, discountState.discountType, discountState.discountValue).finalAmount
+        : amount;
 
-    finalAmount.textContent = `${amount.toLocaleString('fa-IR')} تومان`;
+    finalAmount.textContent = formatMoney(discountedAmount);
 
     const details = [];
     if (registrationType.value === 'student') {
@@ -237,6 +235,10 @@ const updateAmount = () => {
         details.push(paymentType === 'installment' ? 'پرداخت قسطی' : 'پرداخت کامل');
     }
 
+    if (discountState.isValid && discountState.discountType) {
+        details.push(`با تخفیف ${getDiscountDescription(discountState.discountType, discountState.discountValue)}`);
+    }
+
     amountDetails.textContent = details.join(' · ');
 };
 
@@ -244,11 +246,17 @@ const discountState = {
     validatedCode: '',
     isValid: false,
     isChecking: false,
+    discountType: null,
+    discountValue: 0,
+    discountTitle: '',
 };
 
 const resetDiscountState = () => {
     discountState.validatedCode = '';
     discountState.isValid = false;
+    discountState.discountType = null;
+    discountState.discountValue = 0;
+    discountState.discountTitle = '';
 };
 
 const setDiscountFeedback = (message, variant = 'muted') => {
@@ -273,6 +281,50 @@ const getNormalizedDiscountCode = () => {
         return '';
     }
     return normalizeDigits(discountCode.value).trim().toUpperCase();
+};
+
+const formatMoney = (amount) => `${amount.toLocaleString('fa-IR')} تومان`;
+
+const getCurrentAmount = () => {
+    const { registrationType } = getRefs();
+    if (!registrationType) {
+        return null;
+    }
+    const base = calculateBaseAmount();
+    if (!base) {
+        return null;
+    }
+    let amount = base * 1000;
+    const paymentType = getSelectedPaymentType();
+    if ((registrationType.value === 'student' || registrationType.value === 'alumni') && paymentType === 'installment') {
+        amount = Math.round(amount / 2);
+    }
+    return amount;
+};
+
+const getDiscountDescription = (discountType, discountValue) => {
+    if (!discountType) {
+        return 'نامشخص';
+    }
+    if (discountType === 'percent') {
+        return `درصدی ${discountValue}٪`;
+    }
+    const amount = discountValue * 10000;
+    return `مبلغی ${amount.toLocaleString('fa-IR')} تومان`;
+};
+
+const applyDiscountToAmount = (amount, discountType, discountValue) => {
+    if (!discountType || !amount) {
+        return { finalAmount: amount, discountAmount: 0 };
+    }
+    let discountAmount = 0;
+    if (discountType === 'percent') {
+        discountAmount = Math.round(amount * (discountValue / 100));
+    } else {
+        discountAmount = discountValue * 10000;
+    }
+    const finalAmount = Math.max(amount - discountAmount, 0);
+    return { finalAmount, discountAmount };
 };
 
 const validateDiscountCode = async ({ submitAfter = false } = {}) => {
@@ -325,7 +377,31 @@ const validateDiscountCode = async ({ submitAfter = false } = {}) => {
 
         discountState.validatedCode = code;
         discountState.isValid = true;
-        setDiscountFeedback(data.message || 'کد تخفیف معتبر است.', 'success');
+        discountState.discountType = data?.discount?.type ?? null;
+        discountState.discountValue = Number.isFinite(data?.discount?.value) ? data.discount.value : 0;
+        discountState.discountTitle = data?.discount?.title ?? '';
+
+        const currentAmount = getCurrentAmount();
+        const discountDescription = getDiscountDescription(discountState.discountType, discountState.discountValue);
+        if (currentAmount) {
+            const { finalAmount } = applyDiscountToAmount(
+                currentAmount,
+                discountState.discountType,
+                discountState.discountValue,
+            );
+            setDiscountFeedback(
+                `${data.message || 'کد تخفیف معتبر است.'} نوع تخفیف: ${discountDescription} · مبلغ نهایی: ${formatMoney(
+                    finalAmount,
+                )}`,
+                'success',
+            );
+        } else {
+            setDiscountFeedback(
+                `${data.message || 'کد تخفیف معتبر است.'} نوع تخفیف: ${discountDescription} · برای نمایش مبلغ نهایی، نوع ثبت‌نام را کامل کنید.`,
+                'success',
+            );
+        }
+        updateAmount();
         if (submitAfter && form) {
             form.submit();
         }
@@ -508,6 +584,7 @@ document.addEventListener('input', (event) => {
     if (target.id === 'discount_code') {
         resetDiscountState();
         setDiscountFeedback('', 'muted');
+        updateAmount();
     }
 });
 

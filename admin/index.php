@@ -313,7 +313,7 @@ $exportQuery = http_build_query([
                             <div class="card-body">
                                 <div class="text-muted small">تعداد متاهلین</div>
                                 <div class="h5 fw-bold mb-0"><?php echo (int) $categoryCounts['married_count']; ?></div>
-                                <div class="small text-muted mt-2">مجموع پرداختی: <?php echo number_format((int) $categoryCounts['married_amount']); ?> تومان</div>
+                                <div class="small text-muted mt-2">مجموع پرداختی: <?php echo number_format((int) round(((int) $categoryCounts['married_amount']) / 10)); ?> تومان</div>
                             </div>
                         </div>
                     </div>
@@ -322,7 +322,7 @@ $exportQuery = http_build_query([
                             <div class="card-body">
                                 <div class="text-muted small">تعداد دانشجو/فارغ التحصیل/سایر مرد</div>
                                 <div class="h5 fw-bold mb-0"><?php echo (int) $categoryCounts['male_count']; ?></div>
-                                <div class="small text-muted mt-2">مجموع پرداختی: <?php echo number_format((int) $categoryCounts['male_amount']); ?> تومان</div>
+                                <div class="small text-muted mt-2">مجموع پرداختی: <?php echo number_format((int) round(((int) $categoryCounts['male_amount']) / 10)); ?> تومان</div>
                             </div>
                         </div>
                     </div>
@@ -331,7 +331,7 @@ $exportQuery = http_build_query([
                             <div class="card-body">
                                 <div class="text-muted small">تعداد دانشجو/فارغ التحصیل/سایر زن</div>
                                 <div class="h5 fw-bold mb-0"><?php echo (int) $categoryCounts['female_count']; ?></div>
-                                <div class="small text-muted mt-2">مجموع پرداختی: <?php echo number_format((int) $categoryCounts['female_amount']); ?> تومان</div>
+                                <div class="small text-muted mt-2">مجموع پرداختی: <?php echo number_format((int) round(((int) $categoryCounts['female_amount']) / 10)); ?> تومان</div>
                             </div>
                         </div>
                     </div>
