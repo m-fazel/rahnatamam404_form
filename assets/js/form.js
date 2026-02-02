@@ -18,6 +18,8 @@ const getRefs = () => ({
     childrenCount: document.getElementById('children_count'),
     paymentTypeField: document.getElementById('paymentTypeField'),
     discountCode: document.getElementById('discount_code'),
+    discountCheckButton: document.getElementById('discountCheckButton'),
+    discountFeedback: document.getElementById('discountFeedback'),
     finalAmount: document.getElementById('finalAmount'),
     amountDetails: document.getElementById('amountDetails'),
 });
@@ -238,6 +240,108 @@ const updateAmount = () => {
     amountDetails.textContent = details.join(' · ');
 };
 
+const discountState = {
+    validatedCode: '',
+    isValid: false,
+    isChecking: false,
+};
+
+const resetDiscountState = () => {
+    discountState.validatedCode = '';
+    discountState.isValid = false;
+};
+
+const setDiscountFeedback = (message, variant = 'muted') => {
+    const { discountFeedback } = getRefs();
+    if (!discountFeedback) {
+        return;
+    }
+    discountFeedback.textContent = message;
+    discountFeedback.classList.remove('text-success', 'text-danger', 'text-muted');
+    if (variant === 'success') {
+        discountFeedback.classList.add('text-success');
+    } else if (variant === 'danger') {
+        discountFeedback.classList.add('text-danger');
+    } else {
+        discountFeedback.classList.add('text-muted');
+    }
+};
+
+const getNormalizedDiscountCode = () => {
+    const { discountCode } = getRefs();
+    if (!discountCode) {
+        return '';
+    }
+    return normalizeDigits(discountCode.value).trim().toUpperCase();
+};
+
+const validateDiscountCode = async ({ submitAfter = false } = {}) => {
+    const { discountCheckButton } = getRefs();
+    const form = document.getElementById('registrationForm');
+    const code = getNormalizedDiscountCode();
+
+    if (!code) {
+        resetDiscountState();
+        setDiscountFeedback('', 'muted');
+        return true;
+    }
+
+    if (discountState.isValid && discountState.validatedCode === code) {
+        if (submitAfter && form) {
+            form.submit();
+        }
+        return true;
+    }
+
+    if (discountState.isChecking) {
+        return false;
+    }
+
+    discountState.isChecking = true;
+    if (discountCheckButton) {
+        discountCheckButton.disabled = true;
+    }
+    setDiscountFeedback('در حال بررسی کد تخفیف...', 'muted');
+
+    try {
+        const response = await fetch('check_discount.php', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+            },
+            body: (() => {
+                const payload = new FormData();
+                payload.append('code', code);
+                return payload;
+            })(),
+        });
+
+        const data = await response.json();
+        if (!response.ok || !data || data.valid !== true) {
+            resetDiscountState();
+            setDiscountFeedback(data?.message || 'کد تخفیف معتبر نیست.', 'danger');
+            return false;
+        }
+
+        discountState.validatedCode = code;
+        discountState.isValid = true;
+        setDiscountFeedback(data.message || 'کد تخفیف معتبر است.', 'success');
+        if (submitAfter && form) {
+            form.submit();
+        }
+        return true;
+    } catch (error) {
+        resetDiscountState();
+        setDiscountFeedback('خطا در ارتباط با سرور. دوباره تلاش کنید.', 'danger');
+        return false;
+    } finally {
+        discountState.isChecking = false;
+        if (discountCheckButton) {
+            discountCheckButton.disabled = false;
+        }
+    }
+};
+
 let registrationAppInstance = null;
 
 const handleRegistrationType = () => {
@@ -401,6 +505,10 @@ document.addEventListener('input', (event) => {
             validateMobileInput(target);
         }
     }
+    if (target.id === 'discount_code') {
+        resetDiscountState();
+        setDiscountFeedback('', 'muted');
+    }
 });
 
 const initializeForm = () => {
@@ -428,7 +536,22 @@ const initializeForm = () => {
                 event.preventDefault();
                 event.stopPropagation();
             }
+            if (valid && form.checkValidity()) {
+                const discountCode = getNormalizedDiscountCode();
+                if (discountCode) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    validateDiscountCode({ submitAfter: true });
+                }
+            }
             form.classList.add('was-validated');
+        });
+    }
+
+    const { discountCheckButton } = getRefs();
+    if (discountCheckButton) {
+        discountCheckButton.addEventListener('click', () => {
+            validateDiscountCode();
         });
     }
 
