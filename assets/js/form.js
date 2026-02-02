@@ -307,10 +307,10 @@ const getDiscountDescription = (discountType, discountValue) => {
         return 'نامشخص';
     }
     if (discountType === 'percent') {
-        return `درصدی ${discountValue}٪`;
+        return `${discountValue}٪`;
     }
-    const amount = discountValue * 10000;
-    return `مبلغی ${amount.toLocaleString('fa-IR')} تومان`;
+    const amount = discountValue;
+    return `${amount.toLocaleString('fa-IR')} تومان`;
 };
 
 const applyDiscountToAmount = (amount, discountType, discountValue) => {
@@ -321,7 +321,7 @@ const applyDiscountToAmount = (amount, discountType, discountValue) => {
     if (discountType === 'percent') {
         discountAmount = Math.round(amount * (discountValue / 100));
     } else {
-        discountAmount = discountValue * 10000;
+        discountAmount = discountValue;
     }
     const finalAmount = Math.max(amount - discountAmount, 0);
     return { finalAmount, discountAmount };
@@ -390,14 +390,12 @@ const validateDiscountCode = async ({ submitAfter = false } = {}) => {
                 discountState.discountValue,
             );
             setDiscountFeedback(
-                `${data.message || 'کد تخفیف معتبر است.'} نوع تخفیف: ${discountDescription} · مبلغ نهایی: ${formatMoney(
-                    finalAmount,
-                )}`,
+                `${data.message || 'کد تخفیف معتبر است.'} نوع تخفیف: ${discountDescription} ·`,
                 'success',
             );
         } else {
             setDiscountFeedback(
-                `${data.message || 'کد تخفیف معتبر است.'} نوع تخفیف: ${discountDescription} · برای نمایش مبلغ نهایی، نوع ثبت‌نام را کامل کنید.`,
+                `${data.message || 'کد تخفیف معتبر است.'} نوع تخفیف: ${discountDescription}.`,
                 'success',
             );
         }
