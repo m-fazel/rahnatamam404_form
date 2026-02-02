@@ -145,7 +145,7 @@ function fetch_discount_code(PDO $pdo, $code)
     return $discount;
 }
 
-function apply_discount($amount, array $discount = null)
+function apply_discount($amount, array $discount = [])
 {
     if (!$discount) {
         return [$amount, 0];
