@@ -129,6 +129,45 @@ function calculate_amount($registrationType, $studentMode, $entryYear, $marriedS
     return ($base * 10000) + $childrenTotal;
 }
 
+function fetch_discount_code(PDO $pdo, $code)
+{
+    if ($code === '') {
+        return null;
+    }
+
+    $stmt = $pdo->prepare('SELECT * FROM discount_codes WHERE code = :code AND is_active = 1 LIMIT 1');
+    $stmt->execute([':code' => $code]);
+    $discount = $stmt->fetch();
+    if (!$discount) {
+        return null;
+    }
+
+    return $discount;
+}
+
+function apply_discount($amount, array $discount = null)
+{
+    if (!$discount) {
+        return [$amount, 0];
+    }
+
+    $discountAmount = 0;
+    $type = $discount['discount_type'] ?? 'amount';
+    $value = (int) ($discount['discount_value'] ?? 0);
+    if ($value <= 0) {
+        return [$amount, 0];
+    }
+
+    if ($type === 'percent') {
+        $discountAmount = (int) round($amount * ($value / 100));
+    } else {
+        $discountAmount = $value * 10000;
+    }
+
+    $finalAmount = max($amount - $discountAmount, 0);
+    return [$finalAmount, $discountAmount];
+}
+
 function redirect_with_error($message)
 {
     $_SESSION['form_error'] = $message;
@@ -162,6 +201,8 @@ $gender = clean_input($_POST['gender'] ?? '');
 $nationalCode = sanitize_numeric($_POST['national_code'] ?? '');
 $birthDate = clean_input($_POST['birth_date'] ?? '');
 $mobile = sanitize_numeric($_POST['mobile'] ?? '');
+$paymentType = clean_input($_POST['payment_type'] ?? '');
+$discountCodeInput = strtoupper(clean_input($_POST['discount_code'] ?? ''));
 $securityCode = normalize_captcha($_POST['security_code'] ?? '');
 $sessionCode = normalize_captcha($_SESSION['security_code'] ?? '');
 
@@ -184,6 +225,9 @@ if ($registrationType === 'student') {
     if ($academicMajor === '') {
         redirect_with_error('لطفا رشته تحصیلی دانشجو را مشخص کنید.');
     }
+    if ($paymentType === '') {
+        redirect_with_error('لطفا نوع پرداخت دانشجو را مشخص کنید.');
+    }
 }
 
 if ($registrationType === 'alumni') {
@@ -197,6 +241,9 @@ if ($registrationType === 'alumni') {
     if ($entryYear === '' || $entryYearInt < 1345 || $entryYearInt > 1404) {
         redirect_with_error('سال ورودی فارغ التحصیل باید بین ۱۳۴۵ تا ۱۴۰۴ باشد.');
     }
+    if ($paymentType === '') {
+        redirect_with_error('لطفا نوع پرداخت فارغ التحصیل را مشخص کنید.');
+    }
 }
 
 if ($registrationType === 'married') {
@@ -206,6 +253,10 @@ if ($registrationType === 'married') {
     if (!is_valid_national_code($spouseNationalCode)) {
         redirect_with_error('کد ملی همسر معتبر نیست.');
     }
+}
+
+if (!in_array($paymentType, ['full', 'installment'], true)) {
+    $paymentType = 'full';
 }
 
 if ($firstName === '' || $lastName === '' || $gender === '' || $nationalCode === '' || $birthDate === '' || $mobile === '') {
@@ -261,6 +312,16 @@ if ($registrationType === 'student' && $studentMode === 'group') {
 
 $pdo = get_pdo($DB_HOST, $DB_NAME, $DB_USER, $DB_PASS);
 
+$discountCode = '';
+$discountRecord = null;
+if ($discountCodeInput !== '') {
+    $discountRecord = fetch_discount_code($pdo, $discountCodeInput);
+    if (!$discountRecord) {
+        redirect_with_error('کد تخفیف وارد شده معتبر نیست.');
+    }
+    $discountCode = (string) $discountRecord['code'];
+}
+
 $submittedCodeRecords = [
     ['code' => $nationalCode, 'role' => 'primary'],
 ];
@@ -296,9 +357,16 @@ if ($enableDuplicateCheck) {
     }
 }
 
-$amount = calculate_amount($registrationType, $studentMode, $entryYear, $marriedStatus, $childrenCount);
-if ($amount <= 0) {
+$totalAmount = calculate_amount($registrationType, $studentMode, $entryYear, $marriedStatus, $childrenCount);
+if ($totalAmount <= 0) {
     redirect_with_error('مبلغ قابل محاسبه نیست.');
+}
+
+[$discountedAmount, $discountAmount] = apply_discount($totalAmount, $discountRecord);
+
+$amount = $discountedAmount;
+if (($registrationType === 'student' || $registrationType === 'alumni') && $paymentType === 'installment') {
+    $amount = (int) round($discountedAmount / 2);
 }
 
 $formattedAmount = number_format($amount);
@@ -306,7 +374,7 @@ $formattedAmount = number_format($amount);
 $pdo->beginTransaction();
 
 try {
-    $stmt = $pdo->prepare('INSERT INTO registrations (registration_type, student_mode, entry_year, married_status, academic_major, academic_level, amount, formatted_amount, first_name, last_name, gender, national_code, birth_date, mobile, spouse_name, spouse_national_code, spouse_birth_date, children_count, created_at) VALUES (:registration_type, :student_mode, :entry_year, :married_status, :academic_major, :academic_level, :amount, :formatted_amount, :first_name, :last_name, :gender, :national_code, :birth_date, :mobile, :spouse_name, :spouse_national_code, :spouse_birth_date, :children_count, NOW())');
+    $stmt = $pdo->prepare('INSERT INTO registrations (registration_type, student_mode, entry_year, married_status, academic_major, academic_level, payment_type, total_amount, discount_code_id, discount_code, discount_amount, amount, formatted_amount, first_name, last_name, gender, national_code, birth_date, mobile, spouse_name, spouse_national_code, spouse_birth_date, children_count, created_at) VALUES (:registration_type, :student_mode, :entry_year, :married_status, :academic_major, :academic_level, :payment_type, :total_amount, :discount_code_id, :discount_code, :discount_amount, :amount, :formatted_amount, :first_name, :last_name, :gender, :national_code, :birth_date, :mobile, :spouse_name, :spouse_national_code, :spouse_birth_date, :children_count, NOW())');
     $stmt->execute([
         ':registration_type' => $registrationType,
         ':student_mode' => $studentMode ?: null,
@@ -314,6 +382,11 @@ try {
         ':married_status' => $marriedStatus ?: null,
         ':academic_major' => $academicMajor ?: null,
         ':academic_level' => $academicLevel ?: null,
+        ':payment_type' => $paymentType ?: null,
+        ':total_amount' => $discountedAmount,
+        ':discount_code_id' => $discountRecord['id'] ?? null,
+        ':discount_code' => $discountCode ?: null,
+        ':discount_amount' => $discountAmount ?: null,
         ':amount' => $amount,
         ':formatted_amount' => $formattedAmount,
         ':first_name' => $firstName,

@@ -6,6 +6,11 @@ CREATE TABLE `registrations` (
     `married_status` VARCHAR(30) DEFAULT NULL,
     `academic_major` VARCHAR(50) DEFAULT NULL,
     `academic_level` VARCHAR(30) DEFAULT NULL,
+    `payment_type` VARCHAR(20) DEFAULT NULL,
+    `total_amount` BIGINT DEFAULT NULL,
+    `discount_code_id` INT UNSIGNED DEFAULT NULL,
+    `discount_code` VARCHAR(50) DEFAULT NULL,
+    `discount_amount` BIGINT DEFAULT NULL,
     `amount` BIGINT NOT NULL,
     `formatted_amount` VARCHAR(30) NOT NULL,
     `first_name` VARCHAR(100) NOT NULL,
@@ -26,7 +31,8 @@ CREATE TABLE `registrations` (
     `payment_checked_at` DATETIME DEFAULT NULL,
     `created_at` DATETIME NOT NULL,
     PRIMARY KEY (`id`),
-    KEY `idx_payment_status` (`payment_status_id`)
+    KEY `idx_payment_status` (`payment_status_id`),
+    KEY `idx_discount_code_id` (`discount_code_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `group_members` (
@@ -56,4 +62,16 @@ CREATE TABLE `national_codes` (
     UNIQUE KEY `uniq_national_code` (`code`),
     KEY `idx_registration_id` (`registration_id`),
     CONSTRAINT `fk_national_codes_registration` FOREIGN KEY (`registration_id`) REFERENCES `registrations` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `discount_codes` (
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `code` VARCHAR(50) NOT NULL,
+    `title` VARCHAR(150) DEFAULT NULL,
+    `discount_type` VARCHAR(20) NOT NULL DEFAULT 'amount',
+    `discount_value` INT NOT NULL DEFAULT 0,
+    `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+    `created_at` DATETIME NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uniq_discount_code` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

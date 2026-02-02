@@ -2,6 +2,7 @@
 session_start();
 
 require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/jdf.php';
 
 $ADMIN_USERNAME = 'rah_natamam';
 $ADMIN_PASSWORD = 'Rah_natamam@a1';
@@ -80,6 +81,9 @@ $countStmt = $pdo->query(
         (SELECT COUNT(*) * 2
          FROM registrations
          WHERE registration_type = 'married' AND payment_status_id = 0) AS married_count,
+        (SELECT COALESCE(SUM(amount), 0)
+         FROM registrations
+         WHERE registration_type = 'married' AND payment_status_id = 0) AS married_amount,
         (
             SELECT COUNT(*)
             FROM registrations
@@ -94,6 +98,11 @@ $countStmt = $pdo->query(
               AND r.payment_status_id = 0
               AND gm.gender = 'male'
         ) AS male_count,
+        (SELECT COALESCE(SUM(amount), 0)
+         FROM registrations
+         WHERE registration_type IN ('student', 'alumni', 'other')
+           AND gender = 'male'
+           AND payment_status_id = 0) AS male_amount,
         (
             SELECT COUNT(*)
             FROM registrations
@@ -107,7 +116,12 @@ $countStmt = $pdo->query(
             WHERE r.registration_type IN ('student', 'alumni', 'other')
               AND r.payment_status_id = 0
               AND gm.gender = 'female'
-        ) AS female_count"
+        ) AS female_count,
+        (SELECT COALESCE(SUM(amount), 0)
+         FROM registrations
+         WHERE registration_type IN ('student', 'alumni', 'other')
+           AND gender = 'female'
+           AND payment_status_id = 0) AS female_amount"
 );
 $categoryCounts = $countStmt->fetch() ?: [
     'married_count' => 0,
@@ -115,7 +129,7 @@ $categoryCounts = $countStmt->fetch() ?: [
     'female_count' => 0,
 ];
 
-$filter = $_GET['filter'] ?? 'married';
+$filter = $_GET['filter'] ?? 'male';
 
 $where = ['payment_status_id = 0'];
 $params = [];
@@ -183,6 +197,49 @@ $marriedStatusLabels = [
     'married_other' => 'متاهل - غیرشریفی',
 ];
 
+$academicLevelLabels = [
+    'bachelor' => 'کارشناسی',
+    'masters' => 'کارشناسی ارشد',
+    'phd' => 'دکتری',
+];
+
+$academicMajorLabels = [
+    'economics' => 'اقتصاد',
+    'business_management' => 'مدیریت کسب و کار',
+    'science_policy' => 'سیاستگذاری علم و فناوری',
+    'philosophy_of_science' => 'فلسفه علم',
+    'mechanical' => 'مهندسی مکانیک',
+    'computer' => 'مهندسی کامپیوتر',
+    'electrical' => 'مهندسی برق',
+    'chemical' => 'مهندسی شیمی',
+    'civil' => 'مهندسی عمران',
+    'energy' => 'مهندسی انرژی',
+    'aerospace' => 'مهندسی هوافضا',
+    'industrial' => 'مهندسی صنایع',
+    'marine' => 'مهندسی دریا',
+    'mathematics' => 'ریاضیات و کاربردها',
+    'computer_science' => 'علوم کامپیوتر',
+    'materials' => 'مهندسی مواد و متالوژی',
+    'physics' => 'فیزیک',
+    'chemistry' => 'شیمی',
+];
+
+$paymentTypeLabels = [
+    'full' => 'پرداخت کامل',
+    'installment' => 'پرداخت قسطی',
+];
+
+function format_jalali_datetime($dateString)
+{
+    if (!$dateString) {
+        return '-';
+    }
+    $date = new DateTime($dateString, new DateTimeZone('UTC'));
+    $date->setTimezone(new DateTimeZone('Asia/Tehran'));
+    $timestamp = $date->getTimestamp();
+    return jdate('Y/m/d H:i', $timestamp, '', 'Asia/Tehran', 'fa');
+}
+
 $exportQuery = http_build_query([
     'filter' => $filter,
 ]);
@@ -227,6 +284,7 @@ $exportQuery = http_build_query([
                     </div>
                     <div class="d-flex gap-2">
                         <a class="btn btn-success" href="export.php?<?php echo htmlspecialchars($exportQuery, ENT_QUOTES, 'UTF-8'); ?>">خروجی اکسل</a>
+                        <a class="btn btn-outline-primary" href="discounts.php">مدیریت کدهای تخفیف</a>
                         <a class="btn btn-outline-secondary" href="logout.php">خروج</a>
                     </div>
                 </div>
@@ -255,6 +313,7 @@ $exportQuery = http_build_query([
                             <div class="card-body">
                                 <div class="text-muted small">تعداد متاهلین</div>
                                 <div class="h5 fw-bold mb-0"><?php echo (int) $categoryCounts['married_count']; ?></div>
+                                <div class="small text-muted mt-2">مجموع پرداختی: <?php echo number_format((int) $categoryCounts['married_amount']); ?> تومان</div>
                             </div>
                         </div>
                     </div>
@@ -263,6 +322,7 @@ $exportQuery = http_build_query([
                             <div class="card-body">
                                 <div class="text-muted small">تعداد دانشجو/فارغ التحصیل/سایر مرد</div>
                                 <div class="h5 fw-bold mb-0"><?php echo (int) $categoryCounts['male_count']; ?></div>
+                                <div class="small text-muted mt-2">مجموع پرداختی: <?php echo number_format((int) $categoryCounts['male_amount']); ?> تومان</div>
                             </div>
                         </div>
                     </div>
@@ -271,6 +331,7 @@ $exportQuery = http_build_query([
                             <div class="card-body">
                                 <div class="text-muted small">تعداد دانشجو/فارغ التحصیل/سایر زن</div>
                                 <div class="h5 fw-bold mb-0"><?php echo (int) $categoryCounts['female_count']; ?></div>
+                                <div class="small text-muted mt-2">مجموع پرداختی: <?php echo number_format((int) $categoryCounts['female_amount']); ?> تومان</div>
                             </div>
                         </div>
                     </div>
@@ -317,8 +378,8 @@ $exportQuery = http_build_query([
                                             <div class="small text-muted">تاریخ تولد: <?php echo htmlspecialchars($registration['birth_date'], ENT_QUOTES, 'UTF-8'); ?></div>
                                         </td>
                                         <td>
-                                            <div class="small text-muted">مقطع: <?php echo htmlspecialchars($registration['academic_level'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></div>
-                                            <div class="small text-muted">رشته: <?php echo htmlspecialchars($registration['academic_major'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></div>
+                                            <div class="small text-muted">مقطع: <?php echo htmlspecialchars($academicLevelLabels[$registration['academic_level']] ?? ($registration['academic_level'] ?: '-'), ENT_QUOTES, 'UTF-8'); ?></div>
+                                            <div class="small text-muted">رشته: <?php echo htmlspecialchars($academicMajorLabels[$registration['academic_major']] ?? ($registration['academic_major'] ?: '-'), ENT_QUOTES, 'UTF-8'); ?></div>
                                             <div class="small text-muted">ورودی: <?php echo htmlspecialchars($registration['entry_year'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></div>
                                         </td>
                                         <td>
@@ -335,6 +396,7 @@ $exportQuery = http_build_query([
                                         <td>
                                             <?php $groupMembers = $groupMembersByRegistration[$registration['id']] ?? []; ?>
                                             <?php if ($groupMembers): ?>
+                                                <div class="small text-muted mb-2">شماره گروه: <?php echo (int) $registration['id']; ?></div>
                                                 <?php foreach ($groupMembers as $member): ?>
                                                     <div class="group-member">
                                                         <div class="fw-semibold"><?php echo htmlspecialchars($member['first_name'] . ' ' . $member['last_name'], ENT_QUOTES, 'UTF-8'); ?></div>
@@ -342,6 +404,8 @@ $exportQuery = http_build_query([
                                                         <div class="small text-muted">کد ملی: <?php echo htmlspecialchars($member['national_code'], ENT_QUOTES, 'UTF-8'); ?></div>
                                                         <div class="small text-muted">موبایل: <?php echo htmlspecialchars($member['mobile'], ENT_QUOTES, 'UTF-8'); ?></div>
                                                         <div class="small text-muted">تاریخ تولد: <?php echo htmlspecialchars($member['birth_date'], ENT_QUOTES, 'UTF-8'); ?></div>
+                                                        <div class="small text-muted">مقطع: <?php echo htmlspecialchars($academicLevelLabels[$member['academic_level']] ?? ($member['academic_level'] ?: '-'), ENT_QUOTES, 'UTF-8'); ?></div>
+                                                        <div class="small text-muted">رشته: <?php echo htmlspecialchars($academicMajorLabels[$member['academic_major']] ?? ($member['academic_major'] ?: '-'), ENT_QUOTES, 'UTF-8'); ?></div>
                                                     </div>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
@@ -349,12 +413,16 @@ $exportQuery = http_build_query([
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <div class="small text-muted">مبلغ: <?php echo htmlspecialchars($registration['formatted_amount'], ENT_QUOTES, 'UTF-8'); ?></div>
+                                            <div class="small text-muted">مبلغ پرداختی: <?php echo htmlspecialchars($registration['formatted_amount'], ENT_QUOTES, 'UTF-8'); ?></div>
+                                            <div class="small text-muted">مبلغ کل: <?php echo number_format((int) ($registration['total_amount'] ?? $registration['amount'])); ?></div>
+                                            <div class="small text-muted">نوع پرداخت: <?php echo htmlspecialchars($paymentTypeLabels[$registration['payment_type']] ?? ($registration['payment_type'] ?: '-'), ENT_QUOTES, 'UTF-8'); ?></div>
+                                            <div class="small text-muted">کد تخفیف: <?php echo htmlspecialchars($registration['discount_code'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></div>
+                                            <div class="small text-muted">مقدار تخفیف: <?php echo $registration['discount_amount'] ? number_format((int) $registration['discount_amount']) : '-'; ?></div>
                                             <div class="small text-muted">کد پیگیری: <?php echo htmlspecialchars($registration['payment_reference'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></div>
                                             <div class="small text-muted">وضعیت: <?php echo htmlspecialchars($registration['payment_status_text'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></div>
                                         </td>
                                         <td>
-                                            <span class="small text-muted"><?php echo htmlspecialchars($registration['created_at'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                            <span class="small text-muted"><?php echo htmlspecialchars(format_jalali_datetime($registration['created_at']), ENT_QUOTES, 'UTF-8'); ?></span>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

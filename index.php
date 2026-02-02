@@ -362,6 +362,26 @@ unset($_SESSION['form_error']);
                                         </div>
                                     </div>
 
+                                    <div id="paymentTypeField" class="d-none mt-4">
+                                        <h2 class="h5 fw-bold">نوع پرداخت</h2>
+                                        <div class="d-flex gap-3 flex-wrap">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="payment_type" id="payment_full" value="full">
+                                                <label class="form-check-label" for="payment_full">پرداخت کامل</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="payment_type" id="payment_installment" value="installment">
+                                                <label class="form-check-label" for="payment_installment">پرداخت قسطی (۵۰٪)</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-text">پرداخت قسطی فقط برای دانشجویان و فارغ‌التحصیلان شریف فعال است.</div>
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <label for="discount_code" class="form-label fw-semibold">کد تخفیف</label>
+                                        <input type="text" class="form-control" id="discount_code" name="discount_code" placeholder="در صورت داشتن کد تخفیف وارد کنید">
+                                    </div>
+
                                     <div class="mt-4">
                                         <div class="info-card final-card final-card-light">
                                             <h2 class="h6 mb-2">مبلغ نهایی شما</h2>
