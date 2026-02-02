@@ -16,11 +16,14 @@ const getRefs = () => ({
     spouseNationalCode: document.getElementById('spouse_national_code'),
     spouseBirthDate: document.getElementById('spouse_birth_date'),
     childrenCount: document.getElementById('children_count'),
+    paymentTypeField: document.getElementById('paymentTypeField'),
+    discountCode: document.getElementById('discount_code'),
     finalAmount: document.getElementById('finalAmount'),
     amountDetails: document.getElementById('amountDetails'),
 });
 
 const getStudentModeInputs = () => document.querySelectorAll('input[name="student_mode"]');
+const getPaymentTypeInputs = () => document.querySelectorAll('input[name="payment_type"]');
 const getGroupRequiredFields = () => document.querySelectorAll('.group-required');
 
 const amountTable = {
@@ -184,6 +187,11 @@ const calculateBaseAmount = () => {
     return amountTable[type] ?? null;
 };
 
+const getSelectedPaymentType = () => {
+    const selected = document.querySelector('input[name="payment_type"]:checked');
+    return selected ? selected.value : null;
+};
+
 const updateAmount = () => {
     const { registrationType, childrenCount, finalAmount, amountDetails, entryYear } = getRefs();
     if (!registrationType || !finalAmount || !amountDetails) {
@@ -198,7 +206,12 @@ const updateAmount = () => {
     }
 
     const children = registrationType.value === 'married' ? Math.max(parseInt(childrenCount?.value || 0, 10), 0) : 0;
-    const amount = base * 1000;
+    let amount = base * 1000;
+
+    const paymentType = getSelectedPaymentType();
+    if ((registrationType.value === 'student' || registrationType.value === 'alumni') && paymentType === 'installment') {
+        amount = Math.round(amount / 2);
+    }
 
     finalAmount.textContent = `${amount.toLocaleString('fa-IR')} تومان`;
 
@@ -216,6 +229,10 @@ const updateAmount = () => {
         details.push('فارغ التحصیل');
     } else {
         details.push('سایر');
+    }
+
+    if (paymentType) {
+        details.push(paymentType === 'installment' ? 'پرداخت قسطی' : 'پرداخت کامل');
     }
 
     amountDetails.textContent = details.join(' · ');
@@ -242,8 +259,10 @@ const handleRegistrationType = () => {
         spouseNationalCode,
         spouseBirthDate,
         childrenCount,
+        paymentTypeField,
     } = getRefs();
     const studentModeInputs = getStudentModeInputs();
+    const paymentTypeInputs = getPaymentTypeInputs();
     const groupRequiredFields = getGroupRequiredFields();
     if (!registrationType || !studentFields || !marriedFields || !groupFields || !marriedStatusField) {
         return;
@@ -261,6 +280,9 @@ const handleRegistrationType = () => {
     if (alumniExtraFields) {
         alumniExtraFields.classList.toggle('d-none', value !== 'alumni');
     }
+    if (paymentTypeField) {
+        paymentTypeField.classList.toggle('d-none', value !== 'student' && value !== 'alumni');
+    }
 
     toggleRequired(entryYear, value === 'student');
     toggleRequired(academicMajor, value === 'student' || value === 'alumni');
@@ -273,6 +295,9 @@ const handleRegistrationType = () => {
     toggleRequired(childrenCount, value === 'married');
     studentModeInputs.forEach((input) => {
         toggleRequired(input, value === 'student');
+    });
+    paymentTypeInputs.forEach((input) => {
+        toggleRequired(input, value === 'student' || value === 'alumni');
     });
 
     if (value !== 'student') {
@@ -287,6 +312,17 @@ const handleRegistrationType = () => {
         clearFields(Array.from(groupRequiredFields));
         if (registrationAppInstance) {
             registrationAppInstance.groupBirthDates = ['', ''];
+        }
+    }
+
+    if (value !== 'student' && value !== 'alumni') {
+        paymentTypeInputs.forEach((input) => {
+            input.checked = false;
+        });
+    } else if (!getSelectedPaymentType()) {
+        const fullPayment = document.getElementById('payment_full');
+        if (fullPayment) {
+            fullPayment.checked = true;
         }
     }
 
@@ -339,6 +375,10 @@ document.addEventListener('change', (event) => {
     }
     if (target.getAttribute('name') === 'student_mode') {
         handleStudentMode();
+        return;
+    }
+    if (target.getAttribute('name') === 'payment_type') {
+        updateAmount();
         return;
     }
     if (target.id === 'entry_year' || target.id === 'married_status') {
