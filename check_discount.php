@@ -61,6 +61,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+$pdo = null;
+try {
+    $pdo = get_pdo($DB_HOST, $DB_NAME, $DB_USER, $DB_PASS);
+} catch (PDOException $exception) {
+    http_response_code(500);
+    echo json_encode([
+        'valid' => false,
+        'message' => 'خطای اتصال به پایگاه داده رخ داده است.',
+    ]);
+    exit;
+}
+
 $code = strtoupper(clean_input(normalize_digits($_POST['code'] ?? '')));
 
 if ($code === '') {
