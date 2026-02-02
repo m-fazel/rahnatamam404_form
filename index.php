@@ -80,7 +80,7 @@ unset($_SESSION['form_error']);
                                         <select class="form-select" id="registration_type" name="registration_type" required>
                                             <option value="">انتخاب کنید</option>
                                             <option value="student">دانشجوی شریف</option>
-                                            <option value="alumni">فارغ التحصیل</option>
+                                            <option value="alumni">فارغ التحصیل شریف</option>
                                             <option value="married">متاهلین</option>
                                             <option value="other">سایر</option>
                                         </select>
