@@ -132,14 +132,14 @@ function calculate_amount($registrationType, $studentMode, $entryYear, $marriedS
 function fetch_discount_code(PDO $pdo, $code)
 {
     if ($code === '') {
-        return null;
+        return [];
     }
 
     $stmt = $pdo->prepare('SELECT * FROM discount_codes WHERE code = :code AND is_active = 1 LIMIT 1');
     $stmt->execute([':code' => $code]);
     $discount = $stmt->fetch();
     if (!$discount) {
-        return null;
+        return [];
     }
 
     return $discount;
@@ -313,7 +313,7 @@ if ($registrationType === 'student' && $studentMode === 'group') {
 $pdo = get_pdo($DB_HOST, $DB_NAME, $DB_USER, $DB_PASS);
 
 $discountCode = '';
-$discountRecord = null;
+$discountRecord = [];
 if ($discountCodeInput !== '') {
     $discountRecord = fetch_discount_code($pdo, $discountCodeInput);
     if (!$discountRecord) {
